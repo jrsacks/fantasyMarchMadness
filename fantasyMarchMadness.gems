@@ -1,0 +1,10 @@
+# fantasyMarchMadness.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+daemons -v1.1.5
+eventmachine -v0.12.10
+json -v1.6.5
+nokogiri -v1.5.0
+rack -v1.4.0
+rack-protection -v1.2.0
+sinatra -v1.3.2
+thin -v1.3.1
+tilt -v1.3.3
