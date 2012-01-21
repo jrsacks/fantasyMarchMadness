@@ -1,8 +1,10 @@
 $LOAD_PATH << File.join(Dir.getwd, 'lib')
 require 'sinatra'
+require 'importer'
 require 'scoreboard'
 require 'json'
 
+set :importer, Importer.new
 set :scoreboard, Scoreboard.new
 
 get '/' do
@@ -10,18 +12,22 @@ get '/' do
   File.read(File.join('public', 'index.html'))
 end
 
+get '/standings' do
+  settings.scoreboard.standings.to_json
+end
+
 get '/game/:id' do |id|
-  settings.scoreboard.game(id).to_json
+  settings.importer.game(id).to_json
 end
 
 get '/date/:id' do |id|
-  settings.scoreboard.date(id).to_json
+  settings.importer.date(id).to_json
 end
 
 get '/allteams' do
-  settings.scoreboard.all_teams.to_json
+  settings.importer.all_teams.to_json
 end
 
 get '/players/:id' do |id|
-  settings.scoreboard.players_on_team(id).to_json
+  settings.importer.players_on_team(id).to_json
 end
