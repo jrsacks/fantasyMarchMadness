@@ -5,7 +5,7 @@ require 'scoreboard'
 describe "Scoreboard" do 
   let (:teams) {[{'id' => 1, 'team' => "Jeff's Team", 'players' => ["12345"]}]}
   let (:teams_file) { double 'team file' }
-  let (:players) { {12345 => {"name" => "Novak", "team" => "michigan wolverines", "points" => {"20120121" => 15}, "alive" => true}} }
+  let (:players) { {"12345" => {"name" => "Novak", "team" => "michigan wolverines", "points" => {"20120121" => 15}, "alive" => true}} }
   let (:players_file) { double 'players file' }
   let(:scoreboard) { Scoreboard.new}
 
@@ -31,7 +31,7 @@ describe "Scoreboard" do
   end
 
   it "finds player info" do
-    scoreboard.standings.should == [{"team"=>"Jeff's Team", "players"=> [players[12345]] }]
+    scoreboard.standings.should == [{"team"=>"Jeff's Team", "players"=> [players["12345"]] }]
   end
 
   it "can add a new team" do
@@ -53,6 +53,24 @@ describe "Scoreboard" do
     scoreboard.new_team updated_team
   end
 
-  it "can update points for players"
-  it "can update alive status for players"
+  it "can add a players" do
+    new_players = [{:id => "12346", :name => "Eso Akunne", :team => "Michigan Wolverines"}]
+    updated_players = players.merge({:id => "12346", :name => "Eso Akunne", :team => "Michigan Wolverines", :points => {}, :alive => true})
+    File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json'))).and_return players_file
+    players_file.should_receive(:puts).with updated_players.to_json
+    scoreboard.add_players new_players
+  end
+
+  describe "updating a game" do
+    after(:each) do 
+      scoreboard.update_game [{:id => "12345", :points => 22},
+        {:id => "12346", :points => 20}]
+    end
+
+    it "can update points" do 
+      pending
+    end
+
+    it "can update alive status for players"
+  end
 end

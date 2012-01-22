@@ -28,12 +28,20 @@ class Scoreboard
     File.open(@team_file).puts @teams.to_json
   end
 
+  def add_players(new_players)
+    new_players.each do |player|
+      full_player_info = player.merge({:points => {}, :alive => true})
+      @players.merge! full_player_info
+    end
+    File.open(@player_file).puts @players.to_json 
+  end
+
   def new_id
     ids = @teams.map { |team| team["id"] }
     ids.max + 1
   end
 
-  def update_game
+  def update_game(box_score)
 
   end
 end

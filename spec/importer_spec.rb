@@ -41,7 +41,7 @@ describe "importer" do
                                                   <td>4</td>
                                                   <td>22</td>
                                                   </tr></tbody></div>') 
-      importer.game(gameId)[:players].should == [{:id => 12345, :points => 22}]
+      importer.game(gameId)[:players].should == [{:id => "12345", :points => 22}]
     end
 
     it "handles errors and returns empty array" do
@@ -80,7 +80,7 @@ describe "importer" do
     it 'finds all players for abbreviations' do
       importer.should_receive(:open).with('http://rivals.yahoo.com/ncaa/basketball/teams/max/roster')
         .and_return('<title>Michigan Wolverines - Roster</title><td><a href="/ncaab/players/12345">Akunne, Eso</a></td>')
-      importer.players_on_team('max').should == [{:id => 12345, :name => "Eso Akunne", :team => "Michigan Wolverines"}]
+      importer.players_on_team('max').should == [{:id => "12345", :name => "Eso Akunne", :team => "Michigan Wolverines"}]
     end
 
     it "handles errors and returns empty array" do

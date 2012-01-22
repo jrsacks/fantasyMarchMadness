@@ -11,7 +11,7 @@ class Importer
       doc = Nokogiri::HTML(open("http://rivals.yahoo.com/ncaa/basketball/boxscore?gid=#{id}"))
       box[:final] = true if doc.css('#ysp-reg-box-line_score .final').length > 0
       doc.css('#ysp-reg-box-game_details-game_stats tbody tr').each do |p|
-        idMatch = p.search('a').to_html.match(/[0-9]+/)[0].to_i
+        idMatch = p.search('a').to_html.match(/[0-9]+/)[0]
         points = p.search('td').last.text.to_i
         box[:players] << {:id => idMatch, :points => points}
       end
@@ -61,7 +61,7 @@ class Importer
       doc.search("td a").each do |a|
         if a.to_html.match(/ncaab\/players\//)
           name = a.inner_html.split(', ').reverse.join(' ')
-          id = a['href'].match(/[0-9]+/)[0].to_i
+          id = a['href'].match(/[0-9]+/)[0]
           players << {:id => id, :name => name, :team => teamname}
         end
       end
