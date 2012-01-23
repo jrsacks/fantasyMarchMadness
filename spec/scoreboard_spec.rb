@@ -7,7 +7,7 @@ describe "Scoreboard" do
   let (:teams_file) { double 'team file' }
   let (:players) { {"12345" => {"name" => "Novak", "team" => "michigan wolverines", "points" => {"20120121" => 15}, "alive" => true}} }
   let (:players_file) { double 'players file' }
-  let(:scoreboard) { Scoreboard.new}
+  let (:scoreboard) { Scoreboard.new}
 
   before(:each) do
     File.stub(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'teams.json'))).and_return teams_file
@@ -55,22 +55,38 @@ describe "Scoreboard" do
 
   it "can add a players" do
     new_players = [{:id => "12346", :name => "Eso Akunne", :team => "Michigan Wolverines"}]
-    updated_players = players.merge({:id => "12346", :name => "Eso Akunne", :team => "Michigan Wolverines", :points => {}, :alive => true})
+    updated_players = players.merge({"12346" => {:name => "Eso Akunne", :team => "Michigan Wolverines", :points => {}, :alive => true}})
     File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json'))).and_return players_file
     players_file.should_receive(:puts).with updated_players.to_json
     scoreboard.add_players new_players
   end
 
   describe "updating a game" do
+    before(:each) do 
+      players_file.stub(:puts)
+      scoreboard.add_players [{:id => "12346", :name => "D Rose", :team => "Memphis Tigers"}]
+      File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json'))).and_return players_file
+    end
+
     after(:each) do 
-      scoreboard.update_game [{:id => "12345", :points => 22},
-        {:id => "12346", :points => 20}]
+      scoreboard.update_game("20120122", {:final => true, :players => [{:id => "12345", :points => 22},
+        {:id => "12346", :points => 20}]})
     end
 
     it "can update points" do 
-      pending
+      players_file.should_receive(:puts) do |player_data|
+        data = JSON.parse(player_data)
+        data["12345"]["points"]["20120122"].should == 22
+        data["12346"]["points"]["20120122"].should == 20
+      end
     end
 
-    it "can update alive status for players"
+    it "changes alive status" do
+      players_file.should_receive(:puts) do |player_data|
+        data = JSON.parse(player_data)
+        data["12345"]["alive"].should == true
+        data["12346"]["alive"].should == false
+      end
+    end
   end
 end

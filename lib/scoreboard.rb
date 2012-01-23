@@ -30,7 +30,7 @@ class Scoreboard
 
   def add_players(new_players)
     new_players.each do |player|
-      full_player_info = player.merge({:points => {}, :alive => true})
+      full_player_info = {player[:id] => {"name" => player[:name], "team" => player[:team], "points" => {}, "alive" => true}}
       @players.merge! full_player_info
     end
     File.open(@player_file).puts @players.to_json 
@@ -41,7 +41,29 @@ class Scoreboard
     ids.max + 1
   end
 
-  def update_game(box_score)
+  def find_loser(players)
+    teams = Hash.new { |h,k| h[k] = 0 }
+    players.each do |player|
+      team = @players[player[:id]]["team"]
+      teams[team] += player[:points]
+    end
+    teams.key(teams.values.min)
+  end
 
+  def kill_players(players)
+    loser = find_loser(players)
+
+    players.each do |player|
+      team = @players[player[:id]]["team"]
+      @players[player[:id]]["alive"] = false if team == loser
+    end
+  end
+
+  def update_game(game_id, box_score)
+    kill_players(box_score[:players]) if box_score[:final]
+    box_score[:players].each do |player|
+      @players[player[:id]]["points"].merge!({game_id => player[:points]})
+    end
+    File.open(@player_file).puts @players.to_json 
   end
 end
