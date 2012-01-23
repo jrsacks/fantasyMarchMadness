@@ -25,7 +25,7 @@ class Scoreboard
       team_data["id"] = new_id
       @teams << team_data
     end
-    File.open(@team_file).puts @teams.to_json
+    File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
   end
 
   def add_players(new_players)
@@ -33,7 +33,7 @@ class Scoreboard
       full_player_info = {player[:id] => {"name" => player[:name], "team" => player[:team], "points" => {}, "alive" => true}}
       @players.merge! full_player_info
     end
-    File.open(@player_file).puts @players.to_json 
+    File.open(@player_file, 'w') { |f| f.puts @players.to_json  }
   end
 
   def new_id
@@ -64,6 +64,6 @@ class Scoreboard
     box_score[:players].each do |player|
       @players[player[:id]]["points"].merge!({game_id => player[:points]})
     end
-    File.open(@player_file).puts @players.to_json 
+    File.open(@player_file, 'w') { |f| f.puts @players.to_json  }
   end
 end

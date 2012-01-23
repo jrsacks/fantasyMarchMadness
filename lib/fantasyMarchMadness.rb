@@ -17,7 +17,9 @@ get '/standings' do
 end
 
 get '/game/:id' do |id|
-  settings.importer.game(id).to_json
+  game = settings.importer.game(id)
+  settings.scoreboard.update_game(id, game)
+  game.to_json
 end
 
 get '/date/:id' do |id|
@@ -29,5 +31,7 @@ get '/allteams' do
 end
 
 get '/players/:id' do |id|
-  settings.importer.players_on_team(id).to_json
+  players = settings.importer.players_on_team(id)
+  settings.scoreboard.add_players players
+  players.to_json
 end
