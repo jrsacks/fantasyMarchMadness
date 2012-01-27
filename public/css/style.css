@@ -1,0 +1,84 @@
+body { background-color: #fff; color: #333; }
+
+body, p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+}
+
+.players {
+  top: 30px;
+}
+
+.player {
+  position: absolute;
+  list-style:none;
+}
+
+.lost {
+ color: red;
+}
+
+.current {
+  background: yellow;
+} 
+
+.player-points{
+  list-style: none;
+  position: absolute;
+  left: 150px;
+  top: 0px;
+}
+
+.player-points li{
+  display: inline;
+}
+
+.player-point {
+  float:left;
+  width: 25px;
+  text-align: right;
+}
+
+.player-total{
+  position: absolute;
+  left: 300px;
+  top: 0px;
+}
+
+.team {
+  position:relative;
+  list-style: none;
+  padding-bottom: 5px;
+}
+
+.team li{
+  display: inline;
+  font-size: 18px;
+}
+
+.team-total {
+  position: absolute;
+  left: 490px;
+  top: 0px;
+}
+
+.team-title{
+}
+
+.teams {
+  display:inline;
+  list-style: none;
+}
+
+.teams >li{
+  padding: 10px;
+}
+
+#new_team label{
+  width: 200px;
+}
+ 
+.autocomplete {
+  width: 400px;
+}

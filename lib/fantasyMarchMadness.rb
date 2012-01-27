@@ -12,6 +12,18 @@ get '/' do
   File.read(File.join('public', 'index.html'))
 end
 
+get '/css/style.css' do
+  content_type :css
+  File.read(File.join('public', 'css', 'style.css'))
+end
+
+['jquery-1.6.2.js','underscore.js'].each do |file|
+  get "/scripts/#{file}" do
+    content_type :js
+    File.read(File.join('public', 'scripts', file))
+  end
+end
+
 get '/standings' do
   settings.scoreboard.standings.to_json
 end
