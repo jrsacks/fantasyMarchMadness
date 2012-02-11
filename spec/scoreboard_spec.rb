@@ -5,7 +5,7 @@ require 'scoreboard'
 describe "Scoreboard" do 
   let (:teams) {[{'id' => 1, 'team' => "Jeff's Team", 'players' => ["12345"]}]}
   let (:teams_file) { double 'team file' }
-  let (:players) { {"12345" => {"name" => "Novak", "team" => "michigan wolverines", "points" => {"20120121" => 15}, "alive" => true}} }
+  let (:players) { {"12345" => {"name" => "Novak", "team" => "michigan wolverines", "points" => {"20120121" => 15}, "alive" => true, "current" => false}} }
   let (:players_file) { double 'players file' }
   let (:scoreboard) { Scoreboard.new}
 
@@ -55,7 +55,7 @@ describe "Scoreboard" do
 
   it "can add a players" do
     new_players = [{:id => "12346", :name => "Eso Akunne", :team => "Michigan Wolverines"}]
-    updated_players = players.merge({"12346" => {:name => "Eso Akunne", :team => "Michigan Wolverines", :points => {}, :alive => true}})
+    updated_players = players.merge({"12346" => {:name => "Eso Akunne", :team => "Michigan Wolverines", :points => {}, :alive => true, :current => false}})
     File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json')), 'w').and_yield players_file
     players_file.should_receive(:puts).with updated_players.to_json
     scoreboard.add_players new_players
@@ -69,12 +69,14 @@ describe "Scoreboard" do
     end
 
     before(:each) do 
-      add_player [{:id => "12346", :name => "D Rose", :team => "Memphis Tigers"}]
+      @final = true
+      add_player [{:id => "12346", :name => "D Rose", :team => "Memphis Tigers", :current => false},
+        {:id => "12347", :name => "Other", :team => "Memphis Tigers", :current => false}]
       File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json')), 'w').and_yield players_file
     end
 
     after(:each) do 
-      scoreboard.update_game("20120122", {:final => true, :players => [{:id => "12345", :points => 22},
+      scoreboard.update_game("20120122", {:final => @final, :players => [{:id => "12345", :points => 22},
         {:id => "12346", :points => 20}]})
     end
 
@@ -91,6 +93,30 @@ describe "Scoreboard" do
         data = JSON.parse(player_data)
         data["12345"]["alive"].should == true
         data["12346"]["alive"].should == false
+      end
+    end
+
+    it "kills all players on a team" do
+      players_file.should_receive(:puts) do |player_data|
+        data = JSON.parse(player_data)
+        data["12347"]["alive"].should == false
+      end
+    end
+
+    it "changes current status based on game being final" do
+      players_file.should_receive(:puts) do |player_data|
+        data = JSON.parse(player_data)
+        data["12345"]["current"].should == false
+        data["12346"]["current"].should == false
+      end
+    end
+
+    it "changes current status based on game being final" do
+      @final = false
+      players_file.should_receive(:puts) do |player_data|
+        data = JSON.parse(player_data)
+        data["12345"]["current"].should == true
+        data["12346"]["current"].should == true
       end
     end
   end

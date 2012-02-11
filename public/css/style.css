@@ -17,6 +17,7 @@ h1 {
 }
 
 .player {
+  width: 480px;
   list-style:none;
   position: relative;
   padding: 5px;
