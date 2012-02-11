@@ -6,13 +6,20 @@ body, p, ol, ul, td {
   line-height: 18px;
 }
 
+h1 {
+  padding: 10px;
+}
+
 .players {
-  top: 30px;
+  top: 15px;
+  position: relative;
+  padding-bottom: 15px;
 }
 
 .player {
-  position: absolute;
   list-style:none;
+  position: relative;
+  padding: 5px;
 }
 
 .lost {
@@ -30,44 +37,37 @@ body, p, ol, ul, td {
   top: 0px;
 }
 
-.player-points li{
-  display: inline;
-}
-
 .player-point {
   float:left;
   width: 25px;
   text-align: right;
+  padding: 5px;
 }
 
 .player-total{
   position: absolute;
   left: 300px;
   top: 0px;
+  padding: 5px;
 }
 
 .team {
   position:relative;
   list-style: none;
-  padding-bottom: 5px;
 }
 
 .team li{
-  display: inline;
   font-size: 18px;
 }
 
+
 .team-total {
   position: absolute;
-  left: 490px;
+  left: 535px;
   top: 0px;
 }
 
-.team-title{
-}
-
 .teams {
-  display:inline;
   list-style: none;
 }
 
