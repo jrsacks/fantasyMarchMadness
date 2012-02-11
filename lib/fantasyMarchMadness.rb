@@ -37,3 +37,20 @@ get '/players/:id' do |id|
   settings.scoreboard.add_players players
   players.to_json
 end
+
+get '/data/teams' do
+  settings.scoreboard.teams.to_json
+end
+
+get '/data/players' do
+  settings.scoreboard.players.to_json
+end
+
+post '/team' do 
+  team = JSON.parse(request.body.read.to_s)
+  if team["team"] && team["players"]
+    settings.scoreboard.new_team team 
+  else
+    "Invalid Team"
+  end
+end

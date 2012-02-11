@@ -1,6 +1,8 @@
 require 'json'
 
 class Scoreboard
+  attr_reader :teams, :players
+
   def initialize
     @team_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'teams.json'))
     @player_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json'))
