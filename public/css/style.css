@@ -10,6 +10,26 @@ h1 {
   padding: 10px;
 }
 
+select {
+  font-size: 18px;
+  width: 400px;
+  position: relative;
+  left: 30px;
+}
+
+#team-form{
+  padding: 15px;
+  list-style: none;
+}
+
+#team-form input{
+  width: 300px;
+}
+
+#team-form li{
+  padding-left: 60px;
+}
+
 .players {
   top: 15px;
   position: relative;
