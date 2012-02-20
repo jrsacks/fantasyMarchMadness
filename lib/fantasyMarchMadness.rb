@@ -7,7 +7,7 @@ require 'json'
 set :importer, Importer.new
 set :scoreboard, Scoreboard.new
 
-set :public, File.dirname(__FILE__) + '/../public'
+set :public_folder, File.dirname(__FILE__) + '/../public'
 
 get '/' do
   content_type :html
@@ -25,7 +25,12 @@ get '/game/:id' do |id|
 end
 
 get '/date/:id' do |id|
-  settings.importer.date(id).to_json
+  games = settings.importer.date(id)
+  games.each do |game_id|
+    game = settings.importer.game(game_id)
+    settings.scoreboard.update_game(game_id, game)
+  end
+  games.to_json
 end
 
 get '/allteams' do
