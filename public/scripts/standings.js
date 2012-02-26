@@ -4,6 +4,13 @@ function loadStandings(){
     _.each(sortByPoints(_.map(teams, buildTeam)), function(team){
       $('.teams').append(team.html);
     });
+    var d = new Date();
+    var hour = d.getHours();
+    if(hour > 12){
+      hour = hour - 12;
+    }
+    $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/2012 ' + 
+                      hour + ':' + d.getMinutes() + ':' + d.getSeconds());
   });
 }
 
