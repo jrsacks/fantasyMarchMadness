@@ -1,0 +1,28 @@
+Small Sinatra App to scrape college basketball scores from Yahoo to allow for fantasy basketball.
+
+Start the server by running 
+  $ ruby lib/fantasyMarchMadness.rb
+
+Once running, add teams by posting valid JSON to /team
+
+  $ curl -d '{"team":"first team","players":[]} localhost:4567/team
+
+Load teams by doing a get with the team id
+
+  $ curl localhost:4567/players/wbg
+
+The team id is what Yahoo Sports uses in their team links.
+Basically they are the 3 letter abbreviations for each team off this page:
+  http://rivals.yahoo.com/ncaa/basketball/teams
+
+Once teams are loaded, data can be updated via boxscore id or using the date.
+
+  $ curl localhost:4567/game/201202260443/
+or
+  $ curl localhost:4567/date/2012-02-26
+
+Using the date will load all games for that date.  Careful not to hit yahoo too often, they do not like that.
+
+Standings page will be index.html  Going to teams.html allows easy editing and adding of players to teams.  There is autocomplete for all players that have been loaded.
+
+Cron is your friend when setting a schedule for when to update games.

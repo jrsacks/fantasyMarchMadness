@@ -6,12 +6,21 @@ function loadStandings(){
     });
     var d = new Date();
     var hour = d.getHours();
+    var ampm = 'AM';
     if(hour > 12){
       hour = hour - 12;
+      ampm = 'PM'
     }
     $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/2012 ' + 
-                      hour + ':' + d.getMinutes() + ':' + d.getSeconds());
+                      hour + ':' + twoDigit(d.getMinutes()) + ':' + twoDigit(d.getSeconds()) + ' ' + ampm);
   });
+}
+
+function twoDigit(val){
+  if(val < 10){
+    return '0' + val;
+  }
+  return val;
 }
 
 function sortByPoints(arr){
