@@ -52,7 +52,8 @@ function buildPlayer(player){
 
   _.each(player.points, function(points, gameId){
     total += points;
-    ulPlayerPoints.append($('<li>').addClass('player-point').text(points));
+    ulPlayerPoints.append($('<li>').addClass('player-point')
+                          .append($('<a>').attr('href',"http://rivals.yahoo.com/ncaa/basketball/boxscore?gid=" + gameId).text(points)));
   });
 
   ulPlayerPoints.append($('<li>').addClass('player-total').text(total));
