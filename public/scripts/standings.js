@@ -56,8 +56,11 @@ function buildPlayer(player){
   });
 
   ulPlayerPoints.append($('<li>').addClass('player-total').text(total));
-  var liPlayer = $('<li>').addClass('player').text(player.name).
-    append(ulPlayerPoints);
+  var liPlayer = $('<li>').addClass('player').text(player.name).hover(function(){
+    $(this).text(player.team).append(ulPlayerPoints);
+  }, function(){
+    $(this).text(player.name).append(ulPlayerPoints);
+  }).append(ulPlayerPoints);
 
   if(player.alive == false){
     liPlayer.addClass('lost');
