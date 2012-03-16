@@ -17,6 +17,13 @@ select {
   left: 30px;
 }
 
+.showhide {
+}
+
+.updated {
+  display: inline;
+}
+
 .standings-link {
   position: relative;
   left: 30px;
