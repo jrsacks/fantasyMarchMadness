@@ -7,7 +7,7 @@ function loadStandings(){
     var d = new Date();
     var hour = d.getHours();
     var ampm = 'AM';
-    if(hour > 12){
+    if(hour >= 12){
       hour = hour - 12;
       ampm = 'PM'
     }
