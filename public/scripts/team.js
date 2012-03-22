@@ -42,6 +42,9 @@ function playerText(player){
 function playerInput(player, id, autoComplete){
   var input = $('<input>').addClass('autocomplete player-id').val(playerText(player)).attr('pid', id);
   input.autocomplete(autoComplete, {matchContains : true, max : 20});
+  input.change(function(){
+    console.log('changed');
+  });
   return $('<li>').append(input);
 }
 
@@ -65,12 +68,12 @@ function addPlayerButton(autoComplete){
 }
 
 function postTeamData(team, players){
-  var data = team;
-  data.team = $('#team-name').val();
-  data.players = _.compact(_.map($('.player-id'), function(elem){
-    return _.find(_.keys(players), function(id){
-      return playerText(players[id]) == $(elem).val();
-    });
-  }));
-  $.post('team', JSON.stringify(data), function(){window.location.reload()});
+    var data = team;
+    data.team = $('#team-name').val();
+    data.players = _.compact(_.map($('.player-id'), function(elem){
+      return _.find(_.keys(players), function(id){
+        return playerText(players[id]) == $(elem).val();
+      });
+    }));
+    $.post('team', JSON.stringify(data), function(){window.location.reload()});
 }

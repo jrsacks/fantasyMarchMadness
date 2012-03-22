@@ -8,20 +8,11 @@
   </head>
   <body>
     <h1>Fantasy March Madness 2012 Standings</h1>
-    <input class="showhide" type="button" value="Hide Players"></input><div class='updated'></div>
+    <p class='updated'></p>
     <li class='teams'></li>
     <script type="text/javascript">
       loadStandings();
       setInterval(loadStandings, 1000 * 60);
-      $('.showhide').click(function(){
-        $('.players').toggle();
-        if($(this).val() == 'Hide Players'){
-          $(this).val('Show Players');
-        }
-        else {
-          $(this).val('Hide Players');
-        }
-      });
     </script>
   </body>
 </html>
