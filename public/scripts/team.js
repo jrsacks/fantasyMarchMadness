@@ -42,9 +42,6 @@ function playerText(player){
 function playerInput(player, id, autoComplete){
   var input = $('<input>').addClass('autocomplete player-id').val(playerText(player)).attr('pid', id);
   input.autocomplete(autoComplete, {matchContains : true, max : 20});
-  input.change(function(){
-    console.log('changed');
-  });
   return $('<li>').append(input);
 }
 
