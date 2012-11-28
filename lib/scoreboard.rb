@@ -40,7 +40,7 @@ class Scoreboard
 
   def new_id
     ids = @teams.map { |team| team["id"] }
-    ids.max + 1
+    (ids.max || 0)+ 1
   end
 
   def find_loser(players)

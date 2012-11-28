@@ -14,16 +14,19 @@ get '/' do
   File.read(File.join('public', 'index.html'))
 end
 
+#return standings object
 get '/standings' do
   settings.scoreboard.standings.to_json
 end
 
+#load game with id
 get '/game/:id' do |id|
   game = settings.importer.game(id)
   settings.scoreboard.update_game(id, game)
   game.to_json
 end
 
+#load all games for date
 get '/date/:id' do |id|
   games = settings.importer.date(id)
   games.each do |game_id|
@@ -33,20 +36,24 @@ get '/date/:id' do |id|
   games.to_json
 end
 
+#return list of teams
 get '/allteams' do
   settings.importer.all_teams.to_json
 end
 
+#load players on team
 get '/players/:id' do |id|
   players = settings.importer.players_on_team(id)
   settings.scoreboard.add_players players
   players.to_json
 end
 
+#return all teams
 get '/data/teams' do
   settings.scoreboard.teams.to_json
 end
 
+#return all loaded players for autocomplete team page
 get '/data/players' do
   settings.scoreboard.players.to_json
 end
