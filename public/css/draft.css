@@ -1,0 +1,16 @@
+body { background: #BDBDBD; }
+.chat-container { padding-top: 10px; padding-bottom: 10px;}
+.chat { height: 100%; overflow-y: auto;}
+.chat-timestamp { padding-right: 5px; font-size: smaller;} 
+#team-list { height: 90%; overflow-y: auto;}
+#player-list { height: 100%; overflow-y: auto;}
+.team-row { height: 35%}
+.chat-row {height: 45%}
+.table-light { background-color: #F9F9F9}
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+  background-color: #CFCFCF;
+}
+.template { display: none;}
+.draft-player i, .draft-player span { vertical-align: middle; }
+.draft-player i { padding-right: 5px;}
