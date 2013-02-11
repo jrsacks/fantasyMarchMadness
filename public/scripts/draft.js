@@ -20,7 +20,7 @@ function twoDigit(val){
 
 function addRowsToTeamTable() {
   _.times(10, function(i){
-    var row = $('<tr>');
+    var row = $('<tr>').append($('<td>').text(i + 1));
     _.times(12, function(i){
       row.append($('<td>'));
     });
@@ -80,7 +80,7 @@ $(document).ready(function(){
       newRow.find('.icon-remove').click(function(){
         newRow.remove();
       });
-      $('#player-list tbody').append(newRow);
+      $('#player-list tbody').prepend(newRow);
       $(this).val('');
     });
   });

@@ -1,16 +1,20 @@
 body { background: #BDBDBD; }
-.chat-container { padding-top: 10px; padding-bottom: 10px;}
-.chat { height: 100%; overflow-y: auto;}
-.chat-timestamp { padding-right: 5px; font-size: smaller;} 
+.navbar { margin-bottom: 10px}
+.chat-container { padding: 10px}
+.chat { height: 100%; overflow-y: auto; font-size: 14px;}
+.chat-timestamp { padding-right: 5px; font-size: 12px;} 
 #team-list { height: 90%; overflow-y: auto;}
 #team-list table tr {height : 14px;}
+#team-list table tr td {line-height: normal;}
 #team-list table thead tr {font-size: 14px;}
 #team-list table tbody tr {font-size: 10px;}
 
 #player-list { height: 100%; overflow-y: auto;}
+#player-list thead td { border:none;}
+#player-list td { border-left:none;}
 
-.team-row { height: 35%}
-.chat-row { height: 45%}
+.team-row { height: 32%}
+.chat-row { height: 48%}
 .table-light { background-color: #F9F9F9}
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
@@ -18,5 +22,5 @@ body { background: #BDBDBD; }
 }
 
 .template { display: none;}
-.draft-player i, .draft-player span { vertical-align: middle; }
+.draft-player i, .draft-player a { vertical-align: middle; font-size: 14px;}
 .draft-player i { padding-right: 5px; cursor: pointer;}

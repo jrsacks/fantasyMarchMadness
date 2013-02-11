@@ -16,12 +16,13 @@
       <span class="brand">Fantasy March Draft</span>
     </div>
   </div>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row-fluid team-row">
       <div id="team-list">
         <table class="table table-bordered table-light table-hover table-condensed">
           <thead>
             <tr>
+              <th></th>
               <th>Team 1</th>
               <th>Team 2</th>
               <th>Team 3</th>
@@ -42,27 +43,27 @@
       </div>
     </div>
     <div class="row-fluid chat-row">
-      <div class="hero-unit chat-container span7">
+      <div class="hero-unit chat-container span6">
         <div class='chat'>
         </div>
         <input id="chat-text" class="input-block-level" type="text" placeholder=""></input>
       </div>
-      <div id="player-list" class="span5">
+      <div id="player-list" class="span6">
         <table class="table table-bordered table-light table-condensed">
           <thead>
             <tr>
-              <td>Player Wish List</td>
+              <td colspan="2">Player Wish List</td>
             </tr>
             <tr>
-              <td>
-                <input id="player-search" class="input-xlarge" placeholder="Search for Players"></input>
+              <td colspan="2">
+                <input id="player-search" class="input-xxlarge" placeholder="Search for Players"></input>
               </td>
             </tr>
           </thead>
           <tbody>
           <tr class="template">
             <td class="draft-player"><i title="Remove Player From Wish List" class="icon-remove"></i><a class="name"></a></td>
-            <td><button class="draft-button btn btn-success">Draft</button></td>
+            <td><button class="pull-right draft-button btn btn-success btn-small">Draft</button></td>
           </tr>
           </tbody>
         </table>
