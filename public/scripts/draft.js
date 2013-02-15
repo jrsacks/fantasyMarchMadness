@@ -87,6 +87,15 @@ function addMessageToChat(parsed) {
   scrollChat();
 }
 
+function addPickToChat(parsed) {
+  var msgDate = new Date(parsed.timestamp);
+  $('.chat').append($('<div>')
+    .append($('<span>').addClass('chat-timestamp').text(msgDate.getHours() % 12 + ':' + twoDigit(msgDate.getMinutes()) + ':' + twoDigit(msgDate.getSeconds())))
+    .append($('<span>').addClass('pick-announcement').text(playerText(playerData[parsed.player]) + " Selected By: " + teamData[parsed.team - 1].team)));
+
+  scrollChat();
+}
+
 function removeFromWishList(playerId){
   var player = playerText(playerData[playerId]);
   $('.draft-player').filter(function(){return $(this).text() == player;}).parent().remove()
@@ -130,6 +139,7 @@ function handleMessage(msg) {
   }
   if(parsed.type == "pick"){
     handleDraftPick(parsed);
+    addPickToChat(parsed);
   }
   if(parsed.type == "rename"){
     updateTeamName(parsed);

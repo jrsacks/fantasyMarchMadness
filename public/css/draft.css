@@ -17,6 +17,7 @@ body { background: #BDBDBD; }
 
 .team-row { height: 32%}
 .chat-row { height: 48%}
+.pick-announcement { font-weight: bold; }
 .table-light { background-color: #F9F9F9}
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
