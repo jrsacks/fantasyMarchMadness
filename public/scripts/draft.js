@@ -155,6 +155,7 @@ function updatePlayerAutoComplete(){
     newRow.find('.name').text($(this).val()).attr(playerLink(idFromName($(this).val())));
     newRow.find('.draft-button').click(function(){
       makePick(ws, team, idFromName($(this).closest('tr').find('.name').text()));
+      $('.draft-button').hide();
     });
     newRow.find('.icon-remove').click(function(){
       newRow.remove();
