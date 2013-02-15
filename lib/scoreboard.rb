@@ -30,6 +30,22 @@ class Scoreboard
     File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
   end
 
+  def new_player_on_team(team_id, player_id)
+    @teams.each do |team|
+      players = team['players']
+      players << player_id if team["id"] == team_id
+      team.merge!({'players' => players})
+    end
+    File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
+  end
+
+  def new_team_name(team_id, name)
+    @teams.each do |team|
+      team['team'] = name id if team["id"] == team_id
+    end
+    File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
+  end
+
   def add_players(new_players)
     new_players.each do |player|
       full_player_info = {player[:id] => {"name" => player[:name], "team" => player[:team], "points" => {}, "alive" => true, "current" => false}}

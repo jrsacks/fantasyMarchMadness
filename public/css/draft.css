@@ -1,13 +1,15 @@
 body { background: #BDBDBD; }
 .navbar { margin-bottom: 10px}
 .chat-container { padding: 10px}
-.chat { height: 100%; overflow-y: auto; font-size: 14px;}
+.chat { height: 100%; overflow-y: auto; font-size: 14px; line-height: 14px;}
 .chat-timestamp { padding-right: 5px; font-size: 12px;} 
 #team-list { height: 90%; overflow-y: auto;}
 #team-list table tr {height : 14px;}
 #team-list table tr td {line-height: normal;}
 #team-list table thead tr {font-size: 14px;}
 #team-list table tbody tr {font-size: 10px;}
+#team-list .round-num { width: 1em; }
+.current-pick { background-color: yellow;}
 
 #player-list { height: 100%; overflow-y: auto;}
 #player-list thead td { border:none;}

@@ -5,9 +5,11 @@ require 'scoreboard'
 require 'json'
 require 'em-websocket'
 
+@@scoreboard = Scoreboard.new
+
 class App < Sinatra::Base
   set :importer, Importer.new
-  set :scoreboard, Scoreboard.new
+  set :scoreboard, @@scoreboard
 
   set :public_folder, File.dirname(__FILE__) + '/../public'
 
@@ -77,9 +79,20 @@ end
 
 EM.run {
   connections = []
+  scoreboard = @@scoreboard
   EM::WebSocket.start(:host => "0.0.0.0", :port => 4568) do |ws|
     ws.onopen { connections << ws }
-    ws.onmessage { |msg| connections.each { |c| c.send msg } }
+    ws.onmessage do |msg| 
+      parsed = JSON.parse(msg)
+      if parsed["type"] == "pick"
+        scoreboard.new_player_on_team(parsed["team"], parsed["player"])
+      end
+      if parsed["type"] == "rename"
+        scoreboard.new_team_name(parsed["team"], parsed["newName"])
+      end
+
+      connections.each { |c| c.send msg } 
+    end
     ws.onclose { connections.delete ws}
   end
   App.run!

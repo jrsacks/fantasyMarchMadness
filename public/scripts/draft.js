@@ -1,5 +1,13 @@
+var team = parseInt(window.location.search.split('?')[1], 10);
+
 var colors = ["Red", "Maroon", "Yellow", "Olive","Lime","Green","Aqua","Teal","Blue","Navy","Fuchsia","Purple"];
+var ws;
 var playerData = {};
+var teamData = []
+
+function userFromTeamData() {
+  return teamData[team - 1].team;
+}
 
 function idFromName(name) {
   return _.find(_.keys(playerData), function(playerId){
@@ -18,22 +26,45 @@ function twoDigit(val){
   return val;
 }
 
+function addPlayer(teamId, playerId){
+  var teamList = $('#team-list tbody tr').map(function(){ return $(this).find('td')[teamId]; });
+  var emptyCells = teamList.filter(function() { return $(this).text() === ''; });
+  $(emptyCells[0]).append($('<a>').attr(playerLink(playerId)).text(playerData[playerId].name));
+}
+
 function addRowsToTeamTable() {
   _.times(10, function(i){
-    var row = $('<tr>').append($('<td>').text(i + 1));
-    _.times(12, function(i){
+    var row = $('<tr>').append($('<td>').addClass('round-num').text(i + 1));
+    _.each(teamData, function(i){
       row.append($('<td>'));
     });
+
     $('.team-row tbody').append(row);
+  });
+
+  _.each(teamData, function(team){
+    $('#team-list thead tr').append($('<th>').text(team.team));
+    _.each(team.players, function(playerId){
+      addPlayer(team.id, playerId);
+    });
   });
 }
 
 function send(socket, msg) { 
   socket.send(JSON.stringify({
     timestamp: new Date().getTime(), 
-    userId : new Date().getTime() % 12,
-    user : window.location.search.split('?')[1], 
+    userId : team,
+    user : userFromTeamData(),
     message: msg
+  }));
+}
+
+function makePick(socket, team, player) {
+  socket.send(JSON.stringify({
+    timestamp: new Date().getTime(), 
+    team : team,
+    player : player,
+    type : "pick"
   }));
 }
 
@@ -56,7 +87,39 @@ function addMessageToChat(parsed) {
   scrollChat();
 }
 
+function removeFromWishList(playerId){
+  var player = playerText(playerData[playerId]);
+  $('.draft-player').filter(function(){return $(this).text() == player;}).parent().remove()
+}
+
+function nextPick(){
+  var taken = draftedPlayers().length;
+  var teams = teamData.length;
+  var round = Math.floor(taken / teams);
+  if(round % 2 === 0){
+    return 1 + (taken % teams);
+  }
+  return teams - (taken % teams);
+}
+
+function hideShowDraftButtons(){
+  $('.draft-button').hide();
+  if(nextPick() == team){
+    $('.draft-button').show();
+  }
+  $('#team-list thead th').removeClass('current-pick');
+  $($('#team-list thead th')[nextPick()]).addClass('current-pick');
+}
+
 function handleDraftPick(parsed) {
+  addPlayer(parsed.team, parsed.player)
+  teamData[parsed.team - 1].players.push(parsed.player);
+  updatePlayerAutoComplete();
+  removeFromWishList(parsed.player);
+  hideShowDraftButtons();
+}
+
+function updateTeamName(parsed) {
 }
 
 function handleMessage(msg) { 
@@ -65,29 +128,45 @@ function handleMessage(msg) {
   if(parsed.message){
     addMessageToChat(parsed);
   }
-  if(parsed.draft){
+  if(parsed.type == "pick"){
     handleDraftPick(parsed);
+  }
+  if(parsed.type == "rename"){
+    updateTeamName(parsed);
   }
 }
 
-$(document).ready(function(){
-  $.getJSON('/data/players', function(players){
-    playerData = players;
-    $('#player-search').autocomplete(_.map(players, playerText), {matchContains : true, max : 20});
-    $('#player-search').result(function(){
-      var newRow = $('#player-list tbody .template').clone().removeClass('template');
-      newRow.find('.name').text($(this).val()).attr({target: '_blank', href : 'http://rivals.yahoo.com/ncaa/basketball/players/' + idFromName($(this).val())});
-      newRow.find('.icon-remove').click(function(){
-        newRow.remove();
-      });
-      $('#player-list tbody').prepend(newRow);
-      $(this).val('');
-    });
+function playerLink(id){
+  return {target: '_blank', href : 'http://rivals.yahoo.com/ncaa/basketball/players/' + id};
+}
+
+function draftedPlayers(){
+  return _.flatten(_.map(teamData, function(team) { return team.players; }));
+}
+
+function updatePlayerAutoComplete(){
+  var drafted = draftedPlayers();
+  var undrafted = _.filter(playerData, function(player, id){
+    return !_.contains(drafted, id);
   });
+  $('#player-search').unautocomplete().autocomplete(_.map(undrafted, playerText), {matchContains : true, max : 20});
+  $('#player-search').result(function(){
+    var newRow = $('#player-list tbody .template').clone().removeClass('template');
+    newRow.find('.name').text($(this).val()).attr(playerLink(idFromName($(this).val())));
+    newRow.find('.draft-button').click(function(){
+      makePick(ws, team, idFromName($(this).closest('tr').find('.name').text()));
+    });
+    newRow.find('.icon-remove').click(function(){
+      newRow.remove();
+    });
+    $('#player-list tbody').prepend(newRow);
+    $(this).val('');
+    hideShowDraftButtons();
+  });
+}
 
-  addRowsToTeamTable();
-
-  var ws = new ReconnectingWebSocket('ws://' + window.location.hostname + ':4568');
+$(document).ready(function(){
+  ws = new ReconnectingWebSocket('ws://' + window.location.hostname + ':4568');
   ws.onmessage = handleMessage;
 
   $('#chat-text').keypress(function (e){
@@ -97,8 +176,17 @@ $(document).ready(function(){
     }
   });
 
+  $.getJSON('/data/players', function(players){
+    playerData = players;
+    $.getJSON('/data/teams', function(teams){
+      teamData = teams;
+      addRowsToTeamTable();
+      updatePlayerAutoComplete()
+    });
+  });
+
   setTimeout(function(){
-    send(ws, 'Chat Room');
+    send(ws, 'Hello');
     $('#player-search').val('Trey Burke (Michigan Wolverines)').trigger('result');
   }, 500);
 });
