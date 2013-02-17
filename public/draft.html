@@ -36,25 +36,18 @@
         </div>
         <input id="chat-text" class="input-block-level" type="text" placeholder=""></input>
       </div>
-      <div id="player-list" class="span6">
-        <table class="table table-bordered table-light table-condensed">
-          <thead>
-            <tr>
-              <td colspan="2">Player Wish List</td>
+      <div class="span6">
+        <input id="player-search" class="input-xxlarge" placeholder="Search for Players to Draft"></input>
+        <div id="player-list">
+          <table class="table table-bordered table-light table-condensed">
+            <tbody>
+            <tr class="template">
+              <td class="draft-player"><i title="Remove Player From Wish List" class="icon-remove"></i><a class="name"></a></td>
+              <td><button class="pull-right draft-button btn btn-success btn-small">Draft</button></td>
             </tr>
-            <tr>
-              <td colspan="2">
-                <input id="player-search" class="input-xxlarge" placeholder="Search for Players"></input>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-          <tr class="template">
-            <td class="draft-player"><i title="Remove Player From Wish List" class="icon-remove"></i><a class="name"></a></td>
-            <td><button class="pull-right draft-button btn btn-success btn-small">Draft</button></td>
-          </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

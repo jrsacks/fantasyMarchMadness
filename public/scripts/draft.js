@@ -1,6 +1,5 @@
 var team = parseInt(window.location.search.split('?')[1], 10);
 
-var colors = ["Red", "Maroon", "Yellow", "Olive","Lime","Green","Aqua","Teal","Blue","Navy","Fuchsia","Purple"];
 var ws;
 var playerData = {};
 var teamData = []
@@ -81,8 +80,7 @@ function addMessageToChat(parsed) {
   var msgDate = new Date(parsed.timestamp);
   $('.chat').append($('<div>')
     .append($('<span>').addClass('chat-timestamp').text(msgDate.getHours() % 12 + ':' + twoDigit(msgDate.getMinutes()) + ':' + twoDigit(msgDate.getSeconds())))
-    .append($('<span>').text(parsed.user + ': ').css('color',colors[parsed.userId]))
-    .append($('<span>').text(parsed.message)));
+    .append($('<span>').text(parsed.user + ': ' + parsed.message)));
 
   scrollChat();
 }
@@ -105,6 +103,9 @@ function nextPick(){
   var taken = draftedPlayers().length;
   var teams = teamData.length;
   var round = Math.floor(taken / teams);
+  if(taken == teams*10){
+    return teams + 1;
+  }
   if(round % 2 === 0){
     return 1 + (taken % teams);
   }
@@ -161,8 +162,9 @@ function updatePlayerAutoComplete(){
   });
   $('#player-search').unautocomplete().autocomplete(_.map(undrafted, playerText), {matchContains : true, max : 20});
   $('#player-search').result(function(){
+    var playerNameText = $(this).val();
     var newRow = $('#player-list tbody .template').clone().removeClass('template');
-    newRow.find('.name').text($(this).val()).attr(playerLink(idFromName($(this).val())));
+    newRow.find('.name').text(playerNameText).attr(playerLink(idFromName($(this).val())));
     newRow.find('.draft-button').click(function(){
       makePick(ws, team, idFromName($(this).closest('tr').find('.name').text()));
       $('.draft-button').hide();
@@ -170,6 +172,11 @@ function updatePlayerAutoComplete(){
     newRow.find('.icon-remove').click(function(){
       newRow.remove();
     });
+    
+    $('#player-list tbody tr').filter(function(){
+      return $(this).find('.name').text() === playerNameText;
+    }).remove();
+
     $('#player-list tbody').prepend(newRow);
     $(this).val('');
     hideShowDraftButtons();
@@ -198,6 +205,6 @@ $(document).ready(function(){
 
   setTimeout(function(){
     send(ws, 'Hello');
-    $('#player-search').val('Trey Burke (Michigan Wolverines)').trigger('result');
+    $('#player-search').val('Blake McLimans (Michigan Wolverines)').trigger('result');
   }, 500);
 });
