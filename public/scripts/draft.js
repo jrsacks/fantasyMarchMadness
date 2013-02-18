@@ -35,18 +35,33 @@ function addRowsToTeamTable() {
   _.times(10, function(i){
     var row = $('<tr>').append($('<td>').addClass('round-num').text(i + 1));
     _.each(teamData, function(i){
-      row.append($('<td>'));
+      row.append($('<td>').width( (100 / teamData.length) + '%'));
     });
 
     $('.team-row tbody').append(row);
   });
 
-  _.each(teamData, function(team){
-    $('#team-list thead tr').append($('<th>').text(team.team));
-    _.each(team.players, function(playerId){
-      addPlayer(team.id, playerId);
+  _.each(teamData, function(teamObj){
+    var teamTitle = $('<th>').text(teamObj.team);
+    if(teamObj.id === team){
+      teamTitle = $('<th>').append($('<input>').val(teamObj.team).change(function(){
+        renameTeam(ws, $(this).val());
+      }));
+    }
+    $('#team-list thead tr').append(teamTitle);
+    _.each(teamObj.players, function(playerId){
+      addPlayer(teamObj.id, playerId);
     });
   });
+}
+
+function renameTeam(socket, newName) {
+  socket.send(JSON.stringify({
+    timestamp: new Date().getTime(), 
+    team: team,
+    newName: newName,
+    type : "rename"
+  }));
 }
 
 function send(socket, msg) { 
@@ -130,6 +145,9 @@ function handleDraftPick(parsed) {
 }
 
 function updateTeamName(parsed) {
+  if(parsed.team !== team){
+    $($('#team-list thead th')[parsed.team]).text(parsed.newName);
+  }
 }
 
 function handleMessage(msg) { 

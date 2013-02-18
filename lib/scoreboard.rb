@@ -41,7 +41,7 @@ class Scoreboard
 
   def new_team_name(team_id, name)
     @teams.each do |team|
-      team['team'] = name id if team["id"] == team_id
+      team['team'] = name if team["id"] == team_id
     end
     File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
   end
