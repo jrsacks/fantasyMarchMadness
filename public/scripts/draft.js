@@ -44,7 +44,7 @@ function addRowsToTeamTable() {
   _.each(teamData, function(teamObj){
     var teamTitle = $('<th>').text(teamObj.team);
     if(teamObj.id === team){
-      teamTitle = $('<th>').append($('<input>').val(teamObj.team).change(function(){
+      teamTitle = $('<th>').append($('<input>').addClass('input-small').val(teamObj.team).change(function(){
         renameTeam(ws, $(this).val());
       }));
     }
@@ -82,12 +82,13 @@ function makePick(socket, team, player) {
   }));
 }
 
-function scrollChat() {
-  if(($('.chat div').length - 1) * 30 - $('.chat').scrollTop() > $('.chat').height()){
+function scrollChat(resize) {
+  var lineHeight = 14;
+  if(!resize && ($('.chat div').length - 1) * lineHeight - $('.chat').scrollTop() > $('.chat').height()){
     console.log('no scroll');
   }
   else {
-    $('.chat').scrollTop(9999); // 30 * num rows?
+    $('.chat').scrollTop(lineHeight * ($('.chat div').length + 2)); 
   }
 }
 
@@ -220,6 +221,8 @@ $(document).ready(function(){
       updatePlayerAutoComplete()
     });
   });
+
+  $(window).resize(function(){scrollChat(true);});
 
   setTimeout(function(){
     send(ws, 'Hello');

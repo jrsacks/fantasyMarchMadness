@@ -90,7 +90,6 @@ EM.run {
       if parsed["type"] == "rename"
         scoreboard.new_team_name(parsed["team"], parsed["newName"])
       end
-
       connections.each { |c| c.send msg } 
     end
     ws.onclose { connections.delete ws}

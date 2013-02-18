@@ -6,7 +6,7 @@ body { background: #BDBDBD; }
 #team-list { height: 90%; overflow-y: auto;}
 #team-list table tr {height : 14px;}
 #team-list table tr td {line-height: normal;}
-#team-list table thead tr {font-size: 14px;}
+#team-list table thead tr {font-size: 12px;}
 #team-list table tbody tr {font-size: 10px;}
 #team-list .round-num { width: 1em; }
 .current-pick { background-color: yellow;}
