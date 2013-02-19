@@ -1,11 +1,22 @@
 var team = parseInt(window.location.search.split('?')[1], 10);
 
 var ws;
+var userData = {};
 var playerData = {};
 var teamData = []
 
+function setTeam() {
+  var email = userData["value.ext0"];
+  var teamMatch = _.find(teamData, function(teamObj){
+    return teamObj.email === email;
+  });
+  if(teamMatch){
+    team = teamMatch.id
+  }
+}
+
 function userFromTeamData() {
-  return teamData[team - 1].team;
+  return userData["value.ext1"] + " " + userData["value.ext2"];
 }
 
 function idFromName(name) {
@@ -67,7 +78,6 @@ function renameTeam(socket, newName) {
 function send(socket, msg) { 
   socket.send(JSON.stringify({
     timestamp: new Date().getTime(), 
-    userId : team,
     user : userFromTeamData(),
     message: msg
   }));
@@ -213,19 +223,23 @@ $(document).ready(function(){
     }
   });
 
-  $.getJSON('/data/players', function(players){
-    playerData = players;
-    $.getJSON('/data/teams', function(teams){
-      teamData = teams;
-      addRowsToTeamTable();
-      updatePlayerAutoComplete()
-    });
+  $.getJSON('/userInfo', function(result){
+    userData = result;
+    if(_.keys(userData).length > 0){
+      $('.log-in').hide();
+      $('.hide').removeClass('hide');
+      $.getJSON('/data/players', function(players){
+        playerData = players;
+        $.getJSON('/data/teams', function(teams){
+          teamData = teams;
+          setTeam();
+          addRowsToTeamTable();
+          hideShowDraftButtons();
+          updatePlayerAutoComplete()
+        });
+      });
+    }
   });
 
   $(window).resize(function(){scrollChat(true);});
-
-  setTimeout(function(){
-    send(ws, 'Hello');
-    $('#player-search').val('Blake McLimans (Michigan Wolverines)').trigger('result');
-  }, 500);
 });

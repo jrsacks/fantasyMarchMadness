@@ -14,9 +14,14 @@
   <div class="navbar">
     <div class="navbar-inner">
       <span class="brand">Fantasy March Draft</span>
+      <span class="log-in pull-right">
+        <form action="/draft" method="post">
+          <button class="btn btn-primary" type="submit">Sign In</button>
+        </form>
+      </span>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="container-fluid hide">
     <div class="row-fluid team-row">
       <div id="team-list">
         <table class="table table-bordered table-light table-hover table-condensed">

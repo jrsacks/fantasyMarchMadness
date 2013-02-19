@@ -4,14 +4,39 @@ require 'importer'
 require 'scoreboard'
 require 'json'
 require 'em-websocket'
+require 'rack/openid'
 
 @@scoreboard = Scoreboard.new
 
 class App < Sinatra::Base
+  use Rack::Session::Cookie
+  use Rack::OpenID
+
   set :importer, Importer.new
   set :scoreboard, @@scoreboard
 
   set :public_folder, File.dirname(__FILE__) + '/../public'
+
+  get '/openid' do
+   '<form action="/openid" method="post"><input name="commit" type="submit" value="Sign in" /></form>'
+  end
+
+  post '/draft' do
+    if resp = request.env["rack.openid.response"]
+      if resp.status == :success
+        session[:fields] = resp.get_signed_ns("http://openid.net/srv/ax/1.0")
+      end
+      redirect '/draft'
+    else
+      response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(
+        :identifier => "https://www.google.com/accounts/o8/id",
+        :required => ["http://axschema.org/contact/email",
+                      "http://axschema.org/namePerson/first",
+                      "http://axschema.org/namePerson/last"],
+                      :method => 'POST')
+      throw :halt, [401, 'got openid?']
+    end
+  end
 
   get '/' do
     content_type :html
@@ -21,6 +46,14 @@ class App < Sinatra::Base
   #serve draft page
   get '/draft' do
     File.read(File.join('public', 'draft.html'))
+  end
+
+  get '/userInfo' do
+    if session[:fields]
+      session[:fields].to_json
+    else
+      "{}"
+    end
   end
 
   #return standings object

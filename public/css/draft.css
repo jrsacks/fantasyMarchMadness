@@ -1,5 +1,7 @@
 body { background: #BDBDBD; }
 .navbar { margin-bottom: 10px}
+.hide { display: none;}
+.log-in form { margin: 0px}
 .chat-container { padding: 10px}
 .chat { height: 100%; overflow-y: auto; font-size: 14px; line-height: 14px;}
 .chat-timestamp { padding-right: 5px; font-size: 12px;} 
