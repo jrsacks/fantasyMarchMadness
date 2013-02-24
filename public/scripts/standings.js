@@ -31,44 +31,45 @@ function sortByPoints(arr){
 
 function buildTeam(team){
   var total = 0;
-  var teamPlayers = $('<ul>').addClass('players');
+  var teamPlayers = $('#templates .players').clone();
 
   _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player){
     teamPlayers.append(player.html);
     total += player.points;
   });
 
-  var ulTeam = $('<ul>').addClass('team').
-    append($('<li>').addClass('team-title').text(team.team)).
-    append($('<li>').addClass('team-total').text(total)).
-    append(teamPlayers);
+  var teamContainer = $('#templates .team-container').clone();
+  teamContainer.find('.team-title').text(team.team);
+  teamContainer.find('.team-total').text(total);
+  teamContainer.append(teamPlayers);
 
-  return {html: ulTeam, points : total};
+  return {html: teamContainer, points : total};
 }
 
 function buildPlayer(player){
   var total = 0;
-  var ulPlayerPoints = $('<ul>').addClass('player-points');
+  var playerRow = $('#templates .player').clone();
 
+  var gameNum = 0;
   _.each(player.points, function(points, gameId){
     total += points;
-    ulPlayerPoints.append($('<li>').addClass('player-point')
-                          .append($('<a>').attr('href',"http://rivals.yahoo.com/ncaa/basketball/boxscore?gid=" + gameId).text(points)));
+    playerRow.find('.game' + gameNum).append($('<a>').attr('href',"http://rivals.yahoo.com/ncaa/basketball/boxscore?gid=" + gameId).text(points));
+    gameNum += 1;
   });
 
-  ulPlayerPoints.append($('<li>').addClass('player-total').text(total));
-  var liPlayer = $('<li>').addClass('player').text(player.name).hover(function(){
-    $(this).text(player.team).append(ulPlayerPoints);
+  playerRow.find('.player-total').text(total);
+  playerRow.find('.player-name').text(player.name).hover(function(){
+    $(this).text(player.team);
   }, function(){
-    $(this).text(player.name).append(ulPlayerPoints);
-  }).append(ulPlayerPoints);
+    $(this).text(player.name);
+  });
 
   if(player.alive == false){
-    liPlayer.addClass('lost');
+    playerRow.addClass('lost');
   }
   if(player.current == true){
-    liPlayer.addClass('current');
+    playerRow.addClass('current');
   }
 
-  return {html : liPlayer, points : total};
+  return {html : playerRow, points : total};
 }

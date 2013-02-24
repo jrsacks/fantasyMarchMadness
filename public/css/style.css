@@ -1,53 +1,21 @@
-body { background-color: #fff; color: #333; }
-
-body, p, ol, ul, td {
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size:   13px;
-  line-height: 18px;
+.navbar {
+  margin-bottom: 0px;
 }
 
-h1 {
-  padding: 10px;
+.updated {
+  padding-left: 10px;
+  font-size: smaller;
 }
 
-select {
-  font-size: 18px;
-  width: 400px;
-  position: relative;
-  left: 30px;
+.teams {
+  margin-top: 10px;
 }
 
-.standings-link {
-  position: relative;
-  left: 30px;
+#tempaltes {
+  display: none;
 }
 
-#team-form{
-  padding: 15px;
-  list-style: none;
-}
-
-#team-form input{
-  width: 300px;
-}
-
-#team-form li{
-  padding-left: 60px;
-}
-
-.players {
-  top: 15px;
-  position: relative;
-  padding-bottom: 15px;
-}
-
-.player {
-  font-size: 13px;
-  width: 480px;
-  list-style:none;
-  position: relative;
-  padding: 5px;
-}
+body { background-color: #FAFAFA; }
 
 .lost {
  color: red;
@@ -56,59 +24,3 @@ select {
 .current {
   background: yellow;
 } 
-
-.player-points{
-  list-style: none;
-  position: absolute;
-  left: 265px;
-  top: 0px;
-}
-
-.player-point {
-  float:left;
-  width: 20px;
-  text-align: right;
-  padding: 5px;
-}
-
-.player-total{
-  position: absolute;
-  left: 300px;
-  top: 0px;
-  padding: 5px;
-}
-
-.team {
-  position:relative;
-  list-style: none;
-}
-
-.team li{
-}
-
-.team-title {
-  font-size: 16px;
-}
-
-.team-total {
-  font-size: 16px;
-  position: absolute;
-  left: 650px;
-  top: 0px;
-}
-
-.teams {
-  list-style: none;
-}
-
-.teams >li{
-  padding: 10px;
-}
-
-#new_team label{
-  width: 200px;
-}
- 
-.autocomplete {
-  width: 400px;
-}

@@ -1,5 +1,6 @@
 <html>
   <head>
+    <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script language="javascript" type="text/javascript" src="/scripts/jquery-1.6.2.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/underscore.js" ></script>
@@ -7,12 +8,40 @@
     <title>FantasyMarch</title>
   </head>
   <body>
-    <h1>Fantasy March Madness 2013 Standings</h1>
-    <p class='updated'></p>
-    <li class='teams'></li>
-    <script type="text/javascript">
-      loadStandings();
-      setInterval(loadStandings, 1000 * 60);
-    </script>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <span class="brand">Fantasy March Madness 2013 Standings</span>
+      <span class="log-in pull-right">
+        <form class="navbar-form" action="/" method="post">
+          <button class="btn" type="submit">Sign In</button>
+        </form>
+      </span>
+    </div>
+  </div>
+  <span class='updated'></span>
+  <div class='teams container'></div>
+  <script type="text/javascript">
+    loadStandings();
+    setInterval(loadStandings, 1000 * 60);
+  </script>
+  <div id="templates">
+    <div class="team-container">
+      <div class="team row">
+        <span class="team-title"></span>
+        <span class="pull-right team-total"></span>
+      </div>
+    </div>
+    <div class="players"></div>
+    <div class="player row">
+      <div class="player-name span4"></div>
+        <div class="game0 span1"></div>
+        <div class="game1 span1"></div>
+        <div class="game2 span1"></div>
+        <div class="game3 span1"></div>
+        <div class="game4 span1"></div>
+        <div class="game5 span1"></div>
+      <div class="player-total span1 pull-right"></div>
+    </div>
+  </div>
   </body>
 </html>
