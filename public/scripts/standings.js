@@ -7,9 +7,13 @@ function loadStandings(){
     var d = new Date();
     var hour = d.getHours();
     var ampm = 'AM';
-    if(hour >= 12){
-      hour = hour - 12;
-      ampm = 'PM'
+    if (hour == 0){
+      hour = 12;
+    } else if (hour == 12){
+      ampm = 'PM';
+    }else if( hour > 12){
+      hour = hour - 12
+      ampm = 'PM';
     }
     $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/2012 ' + 
                       hour + ':' + twoDigit(d.getMinutes()) + ':' + twoDigit(d.getSeconds()) + ' ' + ampm);
