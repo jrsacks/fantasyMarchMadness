@@ -4,6 +4,7 @@ body { background: #BDBDBD; }
 .log-in form { margin: 0px}
 .chat-container { padding: 10px}
 .chat { height: 100%; overflow-y: auto; font-size: 14px; line-height: 14px;}
+#chat-text {margin-top:10px;}
 .chat-timestamp { padding-right: 5px; font-size: 12px;} 
 #team-list { height: 90%; overflow-y: auto;}
 #team-list table tr {height : 14px;}
