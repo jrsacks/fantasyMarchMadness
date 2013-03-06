@@ -21,20 +21,22 @@ class App < Sinatra::Base
    '<form action="/openid" method="post"><input name="commit" type="submit" value="Sign in" /></form>'
   end
 
-  post '/draft' do
-    if resp = request.env["rack.openid.response"]
-      if resp.status == :success
-        session[:fields] = resp.get_signed_ns("http://openid.net/srv/ax/1.0")
+  ['/draft', '/'].each do |path|
+    post path do
+      if resp = request.env["rack.openid.response"]
+        if resp.status == :success
+          session[:fields] = resp.get_signed_ns("http://openid.net/srv/ax/1.0")
+        end
+        redirect path
+      else
+        response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(
+          :identifier => "https://www.google.com/accounts/o8/id",
+          :required => ["http://axschema.org/contact/email",
+                        "http://axschema.org/namePerson/first",
+                        "http://axschema.org/namePerson/last"],
+                        :method => 'POST')
+        throw :halt, [401, 'got openid?']
       end
-      redirect '/draft'
-    else
-      response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(
-        :identifier => "https://www.google.com/accounts/o8/id",
-        :required => ["http://axschema.org/contact/email",
-                      "http://axschema.org/namePerson/first",
-                      "http://axschema.org/namePerson/last"],
-                      :method => 'POST')
-      throw :halt, [401, 'got openid?']
     end
   end
 
@@ -100,6 +102,10 @@ class App < Sinatra::Base
     settings.scoreboard.players.to_json
   end
 
+  get '/data/chat' do
+    File.read(File.join('data', 'chat.json'))
+  end
+
   post '/team' do 
     team = JSON.parse(request.body.read.to_s)
     if team["team"] && team["players"]
@@ -122,6 +128,11 @@ EM.run {
       end
       if parsed["type"] == "rename"
         scoreboard.new_team_name(parsed["team"], parsed["newName"])
+      end
+      if parsed["message"]
+        File.open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'chat.json')), 'a') do |f|
+          f.puts msg
+        end
       end
       connections.each { |c| c.send msg } 
     end

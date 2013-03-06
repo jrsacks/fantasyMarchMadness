@@ -228,6 +228,11 @@ $(document).ready(function(){
     if(_.keys(userData).length > 0){
       $('.log-in').hide();
       $('.hide').removeClass('hide');
+      $.get('/data/chat', function(chatMessages){
+        _.each(chatMessages.split('\n'), function(message){
+          addMessageToChat(JSON.parse(message));
+        });
+      });
       $.getJSON('/data/players', function(players){
         playerData = players;
         $.getJSON('/data/teams', function(teams){
