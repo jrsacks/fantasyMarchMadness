@@ -3,6 +3,7 @@ var team = parseInt(window.location.search.split('?')[1], 10);
 var ws;
 var userData = {};
 var playerData = {};
+var standingsData = {};
 var teamData = []
 
 function setTeam() {
@@ -52,11 +53,12 @@ function addRowsToTeamTable() {
     $('.team-row tbody').append(row);
   });
 
+  var maxScore = _.max(_.pluck(teamData, 'score'));
   _.each(teamData, function(teamObj){
     var teamTitle = $('<th>').text(teamObj.team);
-    if(teamObj.id === team){
+    if( (teamObj.id === team && teamObj.score == maxScore) || teamData[team - 1].score > teamObj.score){
       teamTitle = $('<th>').append($('<input>').addClass('input-small').val(teamObj.team).change(function(){
-        renameTeam(ws, $(this).val());
+        renameTeam(ws, $(this).val(), teamObj.id);
       }));
     }
     $('#team-list thead tr').append(teamTitle);
@@ -66,10 +68,10 @@ function addRowsToTeamTable() {
   });
 }
 
-function renameTeam(socket, newName) {
+function renameTeam(socket, newName, id) {
   socket.send(JSON.stringify({
     timestamp: new Date().getTime(), 
-    team: team,
+    team: id,
     newName: newName,
     type : "rename"
   }));
@@ -237,10 +239,19 @@ $(document).ready(function(){
         playerData = players;
         $.getJSON('/data/teams', function(teams){
           teamData = teams;
-          setTeam();
-          addRowsToTeamTable();
-          hideShowDraftButtons();
-          updatePlayerAutoComplete()
+          $.getJSON('/standings', [], function(standings){
+            _.each(standings, function(t, i){ 
+              var score =  _.reduce(t.players, function(total, p){ 
+                return total + _.reduce(p.points, function(sum, points){ 
+                  return sum + points;},0);
+              }, 0);
+              teamData[i].score = score;
+            });
+            setTeam();
+            addRowsToTeamTable();
+            hideShowDraftButtons();
+            updatePlayerAutoComplete()
+          });
         });
       });
     }
