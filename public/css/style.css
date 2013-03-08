@@ -9,13 +9,18 @@
 
 .teams {
   margin-top: 10px;
+  margin-left: 15px;
+  width: 700px;
 }
 
 #tempaltes {
   display: none;
 }
 
-body { background-color: #FAFAFA; }
+body { 
+  background-color: #FAFAFA; 
+  font-size: larger;
+}
 
 .lost {
  color: red;
@@ -24,3 +29,41 @@ body { background-color: #FAFAFA; }
 .current {
   background: yellow;
 } 
+
+.team-title {
+  margin-left: 20px;
+}
+
+.player {
+  margin-left: 20px;
+}
+
+.player-name {
+  width: 300px;
+  float: left;
+  margin-left 30px;
+  margin-right 30px;
+}
+
+.game {
+  width: 2em;
+  float: left;
+  margin-left: 10px;
+}
+
+.player-total {
+  width: 2em;
+  margin-right: 10px;
+}
+
+.team-total {
+  font-weight: bold;
+}
+
+.team:hover, .player:hover{
+  background-color: white;
+}
+
+.hideshow {
+  margin: 5px;
+}

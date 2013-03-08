@@ -18,9 +18,20 @@
       </span>
     </div>
   </div>
+  <button type="button" class="btn hideshow">Hide Players</button> 
   <span class='updated'></span>
-  <div class='teams container'></div>
+  <div class='teams container-fluid'></div>
   <script type="text/javascript">
+    $('.hideshow').click(function(){
+      if($(this).text() == 'Hide Players'){
+        $(this).text('Show Players');
+        $('.players').hide();
+      }
+      else {
+        $(this).text('Hide Players');
+        $('.players').show();
+      }
+    });
     loadStandings();
     setInterval(loadStandings, 1000 * 60);
   </script>
@@ -33,14 +44,14 @@
     </div>
     <div class="players"></div>
     <div class="player row">
-      <div class="player-name span4"></div>
-        <div class="game0 span1"></div>
-        <div class="game1 span1"></div>
-        <div class="game2 span1"></div>
-        <div class="game3 span1"></div>
-        <div class="game4 span1"></div>
-        <div class="game5 span1"></div>
-      <div class="player-total span1 pull-right"></div>
+      <div class="player-name"></div>
+        <div class="game0 game"></div>
+        <div class="game1 game"></div>
+        <div class="game2 game"></div>
+        <div class="game3 game"></div>
+        <div class="game4 game"></div>
+        <div class="game5 game"></div>
+      <div class="player-total pull-right"></div>
     </div>
   </div>
   </body>

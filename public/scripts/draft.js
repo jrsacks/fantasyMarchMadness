@@ -229,7 +229,7 @@ $(document).ready(function(){
       $('.log-in').hide();
       $('.hide').removeClass('hide');
       $.get('/data/chat', function(chatMessages){
-        _.each(chatMessages.split('\n'), function(message){
+        _.each(_.without(chatMessages.split('\n'), ''), function(message){
           addMessageToChat(JSON.parse(message));
         });
       });

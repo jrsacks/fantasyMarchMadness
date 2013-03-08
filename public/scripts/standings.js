@@ -17,6 +17,9 @@ function loadStandings(){
     }
     $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/2012 ' + 
                       hour + ':' + twoDigit(d.getMinutes()) + ':' + twoDigit(d.getSeconds()) + ' ' + ampm);
+    if($('.hideshow').text() == 'Show Players'){
+      $('.players').hide();
+    }
   });
 }
 
