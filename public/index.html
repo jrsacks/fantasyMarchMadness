@@ -15,6 +15,12 @@
         <form class="navbar-form" action="/" method="post">
           <button class="btn" type="submit">Sign In</button>
         </form>
+        <ul class="nav" style="display:none;">
+          <li>
+          <a href="/draft">Draft Page</a>
+          </li>
+        </ul>
+      </span>
       </span>
     </div>
   </div>
@@ -32,6 +38,7 @@
         $('.players').show();
       }
     });
+    showDraftLinkToUsers();
     loadStandings();
     setInterval(loadStandings, 1000 * 60);
   </script>
