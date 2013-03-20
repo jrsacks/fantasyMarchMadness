@@ -49,13 +49,20 @@ function sortByPoints(arr){
 function buildTeam(team){
   var total = 0;
   var teamPlayers = $('#templates .players').clone();
+  var numAlive = 0;
+  var numCurrent = 0;
 
   _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player){
+    if(player.alive){ numAlive = numAlive + 1; }
+    if(player.current){ numCurrent = numCurrent + 1; }
     teamPlayers.append(player.html);
     total += player.points;
   });
 
   var teamContainer = $('#templates .team-container').clone();
+  teamContainer.find('.badge-success').text(numAlive);
+  teamContainer.find('.badge-warning').text(numCurrent);
+  teamContainer.find('.badge-important').text((10 - numAlive));
   teamContainer.find('.team-title').text(team.team);
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);
@@ -88,5 +95,5 @@ function buildPlayer(player){
     playerRow.addClass('current');
   }
 
-  return {html : playerRow, points : total};
+  return {html : playerRow, points : total, alive: player.alive, current: player.current};
 }

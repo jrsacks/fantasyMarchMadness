@@ -10,10 +10,11 @@
 .teams {
   margin-top: 10px;
   margin-left: 15px;
+  margin-bottom: 5px;
   width: 700px;
 }
 
-#tempaltes {
+#templates {
   display: none;
 }
 
@@ -23,25 +24,38 @@ body {
 }
 
 .lost {
- color: red;
+ color: rgb(200, 50, 50);
 }
 
 .current {
-  background: yellow;
+  background: rgb(255, 216, 94);
 } 
 
-.team-title {
+.team {
+  padding-bottom: 2px;
+}
+
+.team:first-child{
   margin-left: 20px;
 }
 
+.team .badge {
+  vertical-align: top;
+  min-width: 15px;
+  text-align: center;
+}
+
+.team-title {
+  vertical-align: bottom;
+}
+
 .player {
-  margin-left: 20px;
+  margin-left: 40px;
 }
 
 .player-name {
   width: 300px;
   float: left;
-  margin-left 30px;
   margin-right 30px;
 }
 
