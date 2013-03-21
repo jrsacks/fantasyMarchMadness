@@ -31,7 +31,7 @@ tables.each do |t|
 
     puts "#{min}-59/2 #{hour} * * * * curl localhost:4567/game/#{gid}"
     puts "*/2 #{hour+1}-#{hour + 2} * * * * curl localhost:4567/game/#{gid}"
-    puts "0-#{min}/2 #{(hour+4)%24} * * * * curl localhost:4567/game/#{gid}"
+    puts "0-#{min}/2 #{(hour+3)%24} * * * * curl localhost:4567/game/#{gid}"
     puts "\n"
   end
 end
