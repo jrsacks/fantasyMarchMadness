@@ -29,9 +29,9 @@ tables.each do |t|
       hour = splitup.first.to_i - 1
     end
 
-    puts "#{min}-59/2 #{hour} * * * curl localhost:4567/game/#{gid}"
-    puts "*/2 #{hour+1}-#{hour + 2} * * * curl localhost:4567/game/#{gid}"
-    puts "0-#{min}/2 #{(hour+3)%24} * * * curl localhost:4567/game/#{gid}"
+    puts "#{min}-59 #{hour} * * * curl localhost:4567/game/#{gid}"
+    puts "* #{hour+1}-#{hour + 2} * * * curl localhost:4567/game/#{gid}"
+    puts "0-#{min} #{(hour+3)%24} * * * curl localhost:4567/game/#{gid}"
     puts "\n"
   end
 end
