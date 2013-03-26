@@ -1,0 +1,131 @@
+
+body { background-color: #fff; color: #333; }
+
+body, p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a { color: #000; }
+a:visited { color: #666; }
+a:hover { color: #fff; background-color:#000; }
+
+div.field, div.actions {
+  margin-bottom: 10px;
+}
+
+#notice {
+  color: green;
+}
+
+.field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: inline;
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  margin-bottom: 0px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#error_explanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+.player {
+  position: relative;
+  list-style:none;
+}
+
+.lost {
+ color: red;
+}
+
+.current {
+  background: yellow;
+} 
+
+.player-points{
+  list-style: none;
+  position: absolute;
+  left: 250px;
+  top: 0px;
+}
+
+.player-points li{
+  display: inline;
+}
+
+.player-point {
+  float:left;
+  width: 25px;
+  text-align: right;
+}
+
+.player-total{
+  position: absolute;
+  left: 300px;
+  top: 0px;
+}
+
+.team {
+  position:relative;
+  list-style: none;
+  padding-bottom: 5px;
+}
+
+.team li{
+  display: inline;
+  font-size: 18px;
+}
+
+.team-total {
+  position: absolute;
+  left: 590px;
+  top: 0px;
+}
+
+.team-title{
+}
+
+.teams {
+  display:inline;
+  list-style: none;
+}
+
+.teams >li{
+  padding: 10px;
+}
+
+#new_team label{
+  width: 200px;
+}
+ 
+.autocomplete {
+  width: 400px;
+}
+
