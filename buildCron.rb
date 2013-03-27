@@ -3,6 +3,7 @@
 require 'nokogiri'
 require 'open-uri'
 
+#take the date as args
 doc = Nokogiri::HTML(STDIN.read)
 tables = doc.search("#ysp-leaguescoreboard table table td.ysptblbdr2 table.ysptblclbg3")
 
@@ -29,6 +30,7 @@ tables.each do |t|
       hour = splitup.first.to_i - 1
     end
 
+    #if num tables > 8, divide by 2 for all cron
     puts "#{min}-59 #{hour} * * * curl localhost:4567/game/#{gid}"
     puts "* #{hour+1}-#{hour + 2} * * * curl localhost:4567/game/#{gid}"
     puts "0-#{min} #{(hour+3)%24} * * * curl localhost:4567/game/#{gid}"
