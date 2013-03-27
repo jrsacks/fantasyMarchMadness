@@ -2,15 +2,25 @@
   <head>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script language="javascript" type="text/javascript" src="/scripts/jquery-1.6.2.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/jquery-1.9.1.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/js/bootstrap.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/underscore.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/standings.js" ></script>
-    <title>FantasyMarch</title>
+    <title>Fantasy March</title>
   </head>
   <body>
   <div class="navbar">
     <div class="navbar-inner">
       <span class="brand">Fantasy March Madness 2013 Standings</span>
+      <ul class="nav">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Historical Standings<b class="caret"></b> </a>
+        <ul class="dropdown-menu">
+          <li><a href="/history/2012.html">2012</a></li>
+          <li><a href="/history/2011.html">2011</a></li>
+        </ul>
+        </li>
+      </ul>
       <span class="log-in pull-right">
         <form class="navbar-form" action="/" method="post">
           <button class="btn" type="submit">Sign In</button>
