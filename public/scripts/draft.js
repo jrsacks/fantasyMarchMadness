@@ -95,7 +95,7 @@ function makePick(socket, team, player) {
 }
 
 function scrollChat(resize) {
-  var lineHeight = 14;
+  var lineHeight = 15;
   if(!resize && ($('.chat div').length - 1) * lineHeight - $('.chat').scrollTop() > $('.chat').height()){
     console.log('no scroll');
   }
