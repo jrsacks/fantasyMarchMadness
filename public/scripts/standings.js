@@ -1,3 +1,44 @@
+function standingsOnLoad(){
+  setupHideShowClickHandler();
+  addHistoryLinks();
+  if(window.location.pathname === '/'){
+    showDraftLinkToUsers();
+    loadStandings();
+    setInterval(loadStandings, 1000 * 60);
+  } else {
+    var year = _.last(window.location.pathname.split('/'));
+    loadStandings(year);
+    $('.year').text(year);
+    $('.updated').hide();
+    $('.history-links').prepend(
+      $('<li>').append(
+        $('<a>').attr('href', '/').text('This Year')));
+  }
+}
+
+function addHistoryLinks(){
+  $.getJSON('/data/years', function(years){
+    _.each(years.sort().reverse(), function(year){
+      $('.history-links').append(
+        $('<li>').append(
+          $('<a>').attr('href', '/history/' + year).text(year)));
+    });
+  });
+}
+
+function setupHideShowClickHandler(){
+  $('.hideshow').click(function(){
+    if($(this).text() == 'Hide Players'){
+      $(this).text('Show Players');
+      $('.players').hide();
+    }
+    else {
+      $(this).text('Hide Players');
+      $('.players').show();
+    }
+  });
+}
+
 function showDraftLinkToUsers() {
   $.getJSON('/userInfo', function(result){
     result;
@@ -8,8 +49,12 @@ function showDraftLinkToUsers() {
   });
 }
 
-function loadStandings(){
-  $.getJSON('/standings', [], function(teams){
+function loadStandings(year){
+  var path = '/standings';
+  if(year){
+    path += '/' + year;
+  }
+  $.getJSON(path, [], function(teams){
     $('.teams').empty();
     _.each(sortByPoints(_.map(teams, buildTeam)), function(team){
       $('.teams').append(team.html);

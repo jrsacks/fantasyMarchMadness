@@ -3,9 +3,9 @@ require 'json'
 class Scoreboard
   attr_reader :teams, :players
 
-  def initialize
-    @team_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'teams.json'))
-    @player_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json'))
+  def initialize(path='data')
+    @team_file = File.expand_path(File.join(File.dirname(__FILE__), '..', path, 'teams.json'))
+    @player_file = File.expand_path(File.join(File.dirname(__FILE__), '..', path, 'players.json'))
     @teams = JSON.parse File.open(@team_file).read
     @players = JSON.parse File.open(@player_file).read
   end

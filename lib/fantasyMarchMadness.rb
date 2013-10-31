@@ -45,6 +45,11 @@ class App < Sinatra::Base
     File.read(File.join('public', 'index.html'))
   end
 
+  get '/history/:year' do |year|
+    content_type :html
+    File.read(File.join('public', 'index.html'))
+  end
+
   #serve draft page
   get '/draft' do
     File.read(File.join('public', 'draft.html'))
@@ -61,6 +66,11 @@ class App < Sinatra::Base
   #return standings object
   get '/standings' do
     settings.scoreboard.standings.to_json
+  end
+  
+  #return standings object
+  get '/standings/:year' do |year|
+    Scoreboard.new("data/#{year}").standings.to_json
   end
 
   #load game with id
@@ -90,6 +100,10 @@ class App < Sinatra::Base
     players = settings.importer.players_on_team(id)
     settings.scoreboard.add_players players
     players.to_json
+  end
+
+  get '/data/years' do
+    Dir.glob('data/*/').map { |path| path.split('/').last }.to_json
   end
 
   #return all teams

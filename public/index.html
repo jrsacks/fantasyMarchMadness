@@ -1,6 +1,6 @@
 <html>
   <head>
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script language="javascript" type="text/javascript" src="/scripts/jquery-1.9.1.min.js" ></script>
     <script language="javascript" type="text/javascript" src="/js/bootstrap.js" ></script>
@@ -11,13 +11,11 @@
   <body>
   <div class="navbar">
     <div class="navbar-inner">
-      <span class="brand">Fantasy March Madness 2013 Standings</span>
+      <span class="brand">Fantasy March Madness <span class="year">2014</span> Standings</span>
       <ul class="nav">
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Historical Standings<b class="caret"></b> </a>
-        <ul class="dropdown-menu">
-          <li><a href="/history/2012.html">2012</a></li>
-          <li><a href="/history/2011.html">2011</a></li>
+        <ul class="dropdown-menu history-links">
         </ul>
         </li>
       </ul>
@@ -38,19 +36,7 @@
   <span class='updated'></span>
   <div class='teams container-fluid'></div>
   <script type="text/javascript">
-    $('.hideshow').click(function(){
-      if($(this).text() == 'Hide Players'){
-        $(this).text('Show Players');
-        $('.players').hide();
-      }
-      else {
-        $(this).text('Hide Players');
-        $('.players').show();
-      }
-    });
-    showDraftLinkToUsers();
-    loadStandings();
-    setInterval(loadStandings, 1000 * 60);
+    $(document).ready(standingsOnLoad);
   </script>
   <div id="templates">
     <div class="team-container">
