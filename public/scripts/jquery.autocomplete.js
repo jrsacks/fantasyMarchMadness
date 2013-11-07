@@ -54,6 +54,7 @@ $.fn.extend({
 });
 
 $.Autocompleter = function(input, options) {
+  $.browser = $.browser || {};
 
 	var KEY = {
 		UP: 38,
