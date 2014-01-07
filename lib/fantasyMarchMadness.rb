@@ -75,9 +75,9 @@ class App < Sinatra::Base
   end
 
   #load game with id
-  get '/game/:id' do |id|
-    game = settings.importer.game(id)
-    settings.scoreboard.update_game(id, game)
+  get '/game/:id' do |url|
+    game = settings.importer.game("/#{url}/")
+    settings.scoreboard.update_game("/#{url}/", game)
     game.to_json
   end
 
