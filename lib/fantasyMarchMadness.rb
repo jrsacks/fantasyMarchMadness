@@ -12,6 +12,7 @@ class App < Sinatra::Base
   use Rack::Session::Cookie
   use Rack::OpenID
 
+  set :bind, '0.0.0.0'
   set :importer, Importer.new
   set :scoreboard, @@scoreboard
 
