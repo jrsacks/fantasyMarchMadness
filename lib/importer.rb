@@ -56,6 +56,7 @@ class Importer
     begin
       doc = Nokogiri::HTML(open("http://sports.yahoo.com/ncaab/teams/#{abbrev}/roster"))
       teamname = doc.search("title").first.inner_html.split(' -').first
+      teamname.gsub!(" on Yahoo! Sports","")
       doc.search("td a").each do |a|
         if a.to_html.match(/ncaab\/players\//)
           name = a.inner_html.split(', ').reverse.join(' ')
