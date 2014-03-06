@@ -14,7 +14,7 @@ class Scoreboard
     #FIXME cache this?  may not matter
     @teams.map do |team|
       players = team["players"].map { |id| @players[id] }
-      {"team" => team["team"], "players" => players}
+      {"team" => team["team"], "players" => players, "name" => team["name"] || team["team"]}
     end
   end
 
