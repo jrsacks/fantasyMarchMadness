@@ -4,6 +4,7 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script language="javascript" type="text/javascript" src="/scripts/jquery-1.9.1.min.js" ></script>
     <script language="javascript" type="text/javascript" src="/js/bootstrap.js" ></script>
+    <script language="javascript" type="text/javascript" src="/js/sugar.1.4.1.min.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/underscore.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/standings.js" ></script>
     <title>Fantasy March</title>
@@ -39,6 +40,14 @@
     $(document).ready(standingsOnLoad);
   </script>
   <div id="templates">
+    <div class="history-container">
+      <div class="history-name"></div>
+    </div>
+    <div class="history row">
+      <div class="offset2 span2 history-year"></div>
+      <div class="span2 history-points"></div>
+      <div class="span2 history-place"></div>
+    </div>
     <div class="team-container">
       <div class="team row">
         <span class="badge badge-success"></span>

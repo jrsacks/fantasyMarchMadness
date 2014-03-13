@@ -69,6 +69,14 @@ class App < Sinatra::Base
     settings.scoreboard.standings.to_json
   end
   
+  get '/standings/historic' do
+    Dir.glob('data/*/').reduce({}) do |memo, path| 
+      year = path.split('/').last 
+      memo[year] = Scoreboard.new("data/#{year}").standings
+      memo
+    end.to_json
+  end
+
   #return standings object
   get '/standings/:year' do |year|
     Scoreboard.new("data/#{year}").standings.to_json

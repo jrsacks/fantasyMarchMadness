@@ -7,13 +7,54 @@ function standingsOnLoad(){
     setInterval(loadStandings, 1000 * 60);
   } else {
     var year = _.last(window.location.pathname.split('/'));
-    loadStandings(year);
+    if (year.match(/20/)){
+      loadStandings(year);
+    }
     $('.year').text(year);
     $('.updated').hide();
     $('.history-links').prepend(
       $('<li>').append(
         $('<a>').attr('href', '/').text('This Year')));
   }
+}
+
+function displayHistoryByTeam(){
+  $.getJSON('/standings/historic', function(standings){
+    var builtStandings = _.reduce(standings, function(memo, teams, year){
+      memo[year] = sortByPoints(_.map(teams, function(team){
+        return _.extend({name : team.name}, buildTeam(team));
+      }));
+      return memo;
+    }, {});
+
+    var teams = _.uniq(_.flatten(_.map(standings, function(s){ return _.pluck(s, 'name')}))).sort();
+    _.each(teams, function(team){
+      var teamContainer = $('#templates .history-container').clone();
+      teamContainer.find('.history-name').text(team);
+
+      _.each(builtStandings, function(standing, year){
+        var thisTeam = _.find(standing, function(s){ return s.name === team;});
+        if (thisTeam){
+          var row = $("#templates .history.row").clone();
+          var place = _.indexOf(standing, thisTeam) + 1;
+          row.find('.history-year').text(year);
+          row.find('.history-points').text(thisTeam.points);
+          row.find('.history-place').text(place);
+          teamContainer.append(row);
+        }
+      });
+
+      var row = $("#templates .history.row").clone();
+      row.find('.history-year').text("Avg:");
+      var points = teamContainer.find('.history-points').map(function(){ return parseInt($(this).text(), 10);}).toArray();
+      var place = teamContainer.find('.history-place').map(function(){ return parseInt($(this).text(), 10);}).toArray();
+      row.find('.history-points').text(points.average());
+      row.find('.history-place').text(place.average().round(2));
+      teamContainer.append(row);
+
+      $('.teams').append(teamContainer);
+    });
+  });
 }
 
 function addHistoryLinks(){
@@ -23,6 +64,12 @@ function addHistoryLinks(){
         $('<li>').append(
           $('<a>').attr('href', '/history/' + year).text(year)));
     });
+    $('.history-links').append($('<li>').addClass('divider')).append(
+      $('<li>').append($('<a>').attr('href', '/history/Team').text('By Team')));
+    if(window.location.pathname === '/history/Team'){
+      $('.hideshow').hide();
+      displayHistoryByTeam();
+    }
   });
 }
 
