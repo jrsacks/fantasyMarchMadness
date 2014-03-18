@@ -172,6 +172,7 @@ function handleMessage(msg) {
   if(parsed.type == "pick"){
     handleDraftPick(parsed);
     addPickToChat(parsed);
+    $('.timer').text(0);
   }
   if(parsed.type == "rename"){
     updateTeamName(parsed);
@@ -258,4 +259,9 @@ $(document).ready(function(){
   });
 
   $(window).resize(function(){scrollChat(true);});
+  setInterval(function(){
+    var lastVal = parseInt($('.timer').text(),10);
+    $('.timer').text(lastVal + 1);
+  }, 1000);
+
 });
