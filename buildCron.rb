@@ -3,24 +3,18 @@
 require 'nokogiri'
 require 'open-uri'
 
-#take the date as args
-doc = Nokogiri::HTML(STDIN.read)
-tables = doc.search("#ysp-leaguescoreboard table table td.ysptblbdr2 table.ysptblclbg3")
-
-tables.each do |t|
-  time = t.search('span.yspscores').text
-  gid = ''
-  t.search('td.yspscores a.yspmore').each do |a|
-    if a['href'].match /gid=/
-      gid = a['href'].match(/[^0-9]*([0-9]*).*/)[1]
-    end
-  end
-  unless gid.empty?
+tv = ["CBS","TBS","TNT","TRU"]
+date = ARGV[0] || Time.now.to_s.split(' ').first
+doc = Nokogiri::HTML(open("http://sports.yahoo.com/college-basketball/scoreboard/?conf=all&date=#{date}"))
+doc.css(".game").each do |game|
+  if tv.include? game.css('.tv').text
+    time = game.css('.time').text
+    gid = game.attr("data-url").gsub("/ncaab/","").gsub("/","")
     hour = 0
     min = 0
     splitup = time.split(' ').first.split(':')
     min = splitup.last 
-    if time.match(/pm/)
+    if time.match(/pm/i)
       if splitup.first.to_i == 12
         hour = 11 
       else
