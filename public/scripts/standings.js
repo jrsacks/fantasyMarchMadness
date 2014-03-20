@@ -174,7 +174,7 @@ function buildPlayer(player){
   var gameNum = 0;
   _.each(player.points, function(points, gameId){
     total += points;
-    playerRow.find('.game' + gameNum).append($('<a>').attr('href',"http://rivals.yahoo.com/ncaa/basketball/boxscore?gid=" + gameId).text(points));
+    playerRow.find('.game' + gameNum).append($('<a>').attr('href',"http://sports.yahoo.com/ncaab/" + gameId).text(points));
     gameNum += 1;
   });
 
