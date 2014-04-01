@@ -62,6 +62,10 @@ body {
   margin-left: 40px;
 }
 
+.player-round {
+  font-size: small;
+}
+
 .player-name {
   width: 300px;
   float: left;

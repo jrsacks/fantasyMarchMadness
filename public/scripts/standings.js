@@ -167,7 +167,7 @@ function buildTeam(team){
   return {html: teamContainer, points : total};
 }
 
-function buildPlayer(player){
+function buildPlayer(player, index){
   var total = 0;
   var playerRow = $('#templates .player').clone();
 
@@ -178,8 +178,10 @@ function buildPlayer(player){
     gameNum += 1;
   });
 
+  var round = index + 1;
+  playerRow.find('.player-round').text(round);
   playerRow.find('.player-total').text(total);
-  playerRow.find('.player-name').text(player.name).hover(function(){
+  playerRow.find('.player-name .name').data('round',round).text(player.name).hover(function(){
     $(this).text(player.team);
   }, function(){
     $(this).text(player.name);
