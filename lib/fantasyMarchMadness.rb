@@ -4,13 +4,21 @@ require 'importer'
 require 'scoreboard'
 require 'json'
 require 'em-websocket'
-require 'rack/openid'
+require 'google/api_client'
 
 @@scoreboard = Scoreboard.new
 
 class App < Sinatra::Base
   use Rack::Session::Cookie
-  use Rack::OpenID
+
+  client = Google::APIClient.new
+  client.authorization.client_id = "927669527141.apps.googleusercontent.com"
+  client.authorization.client_secret = "6q7d3y_DpbCFKWmqASoZEXjW"
+  client.authorization.scope = 'email'
+  oauth2_api = client.discovered_api('plus')
+
+  set :api_client, client
+  set :oauth2_api, oauth2_api
 
   set :bind, '0.0.0.0'
   set :importer, Importer.new
@@ -18,27 +26,55 @@ class App < Sinatra::Base
 
   set :public_folder, File.dirname(__FILE__) + '/../public'
 
-  get '/openid' do
-   '<form action="/openid" method="post"><input name="commit" type="submit" value="Sign in" /></form>'
+  def api_client
+    settings.api_client
+  end
+
+  def oauth2_api
+    settings.oauth2_api
+  end
+
+  def user_credentials
+    @authorization ||= (
+      auth = api_client.authorization.dup
+      auth.redirect_uri = to('/oauth2callback')
+      auth.update_token!(session)
+      auth
+    )
   end
 
   ['/draft', '/'].each do |path|
     post path do
-      if resp = request.env["rack.openid.response"]
-        if resp.status == :success
-          session[:fields] = resp.get_signed_ns("http://openid.net/srv/ax/1.0")
-        end
-        redirect path
+      if session[:user]
+        redirect to(path) 
       else
-        response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(
-          :identifier => "https://www.google.com/accounts/o8/id",
-          :required => ["http://axschema.org/contact/email",
-                        "http://axschema.org/namePerson/first",
-                        "http://axschema.org/namePerson/last"],
-                        :method => 'POST')
-        throw :halt, [401, 'got openid?']
+        redirect to('/oauth2authorize')
       end
     end
+  end
+
+  get '/login' do
+    unless session[:user]
+      result = api_client.execute(:api_method => oauth2_api.people.get,
+                                  :parameters => {'userId' => 'me'},
+                                  :authorization => user_credentials)
+      puts session[:user] = result.data.to_hash
+    end
+    redirect to('/')
+  end
+
+  get '/oauth2authorize' do
+    redirect user_credentials.authorization_uri.to_s, 303
+  end
+
+  get '/oauth2callback' do
+    user_credentials.code = params[:code] if params[:code]
+    user_credentials.fetch_access_token!
+    session[:access_token] = user_credentials.access_token
+    session[:refresh_token] = user_credentials.refresh_token
+    session[:expires_in] = user_credentials.expires_in
+    session[:issued_at] = user_credentials.issued_at
+    redirect to('/login')
   end
 
   get '/' do
@@ -57,8 +93,8 @@ class App < Sinatra::Base
   end
 
   get '/userInfo' do
-    if session[:fields]
-      session[:fields].to_json
+    if session[:user]
+      session[:user].to_json
     else
       "{}"
     end

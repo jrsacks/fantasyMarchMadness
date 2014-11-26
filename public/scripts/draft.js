@@ -7,7 +7,7 @@ var standingsData = {};
 var teamData = []
 
 function setTeam() {
-  var email = userData["value.ext0"];
+  var email = userData.emails[0].value;
   var teamMatch = _.find(teamData, function(teamObj){
     return teamObj.email === email;
   });
@@ -17,7 +17,7 @@ function setTeam() {
 }
 
 function userFromTeamData() {
-  return userData["value.ext1"] + " " + userData["value.ext2"];
+  return userData.displayName;
 }
 
 function idFromName(name) {

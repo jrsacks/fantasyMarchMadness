@@ -88,7 +88,6 @@ function setupHideShowClickHandler(){
 
 function showDraftLinkToUsers() {
   $.getJSON('/userInfo', function(result){
-    result;
     if(_.keys(result).length > 0){
       $('.log-in form').hide();
       $('.log-in ul').show();
