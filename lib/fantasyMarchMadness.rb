@@ -12,8 +12,8 @@ class App < Sinatra::Base
   use Rack::Session::Cookie
 
   client = Google::APIClient.new
-  client.authorization.client_id = "927669527141.apps.googleusercontent.com"
-  client.authorization.client_secret = "6q7d3y_DpbCFKWmqASoZEXjW"
+  client.authorization.client_id = ENV["CLIENT_ID"]
+  client.authorization.client_secret = ENV["CLIENT_SECRET"]
   client.authorization.scope = 'email'
   oauth2_api = client.discovered_api('plus')
 
