@@ -5,7 +5,7 @@ require 'scoreboard'
 describe "Scoreboard" do 
   let (:teams) {[{'id' => 1, 'team' => "Jeff's Team", 'players' => ["12345"]}]}
   let (:teams_file) { double 'team file' }
-  let (:players) { {"12345" => {"name" => "Novak", "team" => "michigan wolverines", "points" => {"20120121" => 15}, "alive" => true, "current" => false}} }
+  let (:players) { {"12345" => {"name" => "Novak", "team" => "michigan wolverines", "stats" => {"20120121" => {"points" => 15}}, "current" => false}} }
   let (:players_file) { double 'players file' }
   let (:scoreboard) { Scoreboard.new}
 
@@ -55,7 +55,7 @@ describe "Scoreboard" do
 
   it "can add a players" do
     new_players = [{:id => "12346", :name => "Eso Akunne", :team => "Michigan Wolverines"}]
-    updated_players = players.merge({"12346" => {:name => "Eso Akunne", :team => "Michigan Wolverines", :points => {}, :alive => true, :current => false}})
+    updated_players = players.merge({"12346" => {:name => "Eso Akunne", :team => "Michigan Wolverines", :stats => {}, :current => false}})
     File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json')), 'w').and_yield players_file
     players_file.should_receive(:puts).with updated_players.to_json
     scoreboard.add_players new_players
@@ -83,23 +83,8 @@ describe "Scoreboard" do
     it "can update points" do 
       players_file.should_receive(:puts) do |player_data|
         data = JSON.parse(player_data)
-        data["12345"]["points"]["20120122"].should == 22
-        data["12346"]["points"]["20120122"].should == 20
-      end
-    end
-
-    it "changes alive status" do
-      players_file.should_receive(:puts) do |player_data|
-        data = JSON.parse(player_data)
-        data["12345"]["alive"].should == true
-        data["12346"]["alive"].should == false
-      end
-    end
-
-    it "kills all players on a team" do
-      players_file.should_receive(:puts) do |player_data|
-        data = JSON.parse(player_data)
-        data["12347"]["alive"].should == false
+        data["12345"]["stats"]["20120122"].should == {"id" => "12345", "points" => 22}
+        data["12346"]["stats"]["20120122"].should == {"id" => "12346", "points" => 20}
       end
     end
 
