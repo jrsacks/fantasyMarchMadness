@@ -27,7 +27,7 @@ describe "importer" do
 
     it "finds the points for each player" do 
       importer.stub(:open).with(url).and_return('<div class="data-container"><table><tbody><tr><th class="athlete"><a href="/ncaab/players/122889/">Isaiah Reeves</a></th><td class="ncaab-stat-type-13 points-scored" title="Points Scored">6</td></tr></tbody></table></div>') 
-      importer.game(game_url)[:players].should == [{:id => "122889", :points => 6}]
+      importer.game(game_url)[:players].should == [{:id => "122889", :points => 6, :threes => 0, :assists => 0, :rebounds => 0, :steals => 0, :blocks => 0}]
     end
 
     it "handles errors and returns empty array" do

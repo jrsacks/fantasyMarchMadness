@@ -2,9 +2,6 @@ require 'nokogiri'
 require 'open-uri'
 
 class Importer
-  def initialize
-  end
-
   def game(url)
     box = {:final => false, :players => []}
     begin
@@ -12,8 +9,16 @@ class Importer
       box[:final] = true if doc.css('.score.winner').length > 0
       doc.css('.data-container table tbody .athlete').each do |player|
         idMatch = player.css('a').attr('href').value.match(/[0-9]+/)[0]
-        points = player.parent().css('.points-scored').text.to_i
-        box[:players] << {:id => idMatch, :points => points}
+        player_row = player.parent()
+        box[:players] << {
+          :id => idMatch, 
+          :points => player_row.css('.points-scored').text.to_i,
+          :threes => player_row.css('.three-pointers').text.split('-').first.to_i,
+          :rebounds => player_row.css('.total-rebounds').text.to_i,
+          :assists => player_row.css('.assists').text.to_i,
+          :steals => player_row.css('.steals').text.to_i,
+          :blocks => player_row.css('.blocked-shots').text.to_i
+        }
       end
 
     rescue => e

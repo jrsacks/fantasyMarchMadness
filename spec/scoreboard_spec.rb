@@ -31,7 +31,7 @@ describe "Scoreboard" do
   end
 
   it "finds player info" do
-    scoreboard.standings.should == [{"team"=>"Jeff's Team", "players"=> [players["12345"]] }]
+    scoreboard.standings.should == [{"team"=>"Jeff's Team", "players"=> [players["12345"]], 'name' => "Jeff's Team"}]
   end
 
   it "can add a new team" do
