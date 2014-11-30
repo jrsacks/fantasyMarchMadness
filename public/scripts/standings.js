@@ -1,6 +1,4 @@
 function standingsOnLoad(){
-  setupHideShowClickHandler();
-  addHistoryLinks();
   if(window.location.pathname === '/'){
     showDraftLinkToUsers();
     loadStandings();
@@ -73,19 +71,6 @@ function addHistoryLinks(){
   });
 }
 
-function setupHideShowClickHandler(){
-  $('.hideshow').click(function(){
-    if($(this).text() == 'Hide Players'){
-      $(this).text('Show Players');
-      $('.players').hide();
-    }
-    else {
-      $(this).text('Hide Players');
-      $('.players').show();
-    }
-  });
-}
-
 function showDraftLinkToUsers() {
   $.getJSON('/userInfo', function(result){
     if(_.keys(result).length > 0){
@@ -140,20 +125,13 @@ function sortByPoints(arr){
 function buildTeam(team){
   var total = 0;
   var teamPlayers = $('#templates .players').clone();
-  var numAlive = 0;
-  var numCurrent = 0;
 
   _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player){
-    if(player.alive){ numAlive = numAlive + 1; }
-    if(player.current){ numCurrent = numCurrent + 1; }
     teamPlayers.append(player.html);
     total += player.points;
   });
 
   var teamContainer = $('#templates .team-container').clone();
-  teamContainer.find('.badge-success').text(numAlive);
-  teamContainer.find('.badge-warning').text(numCurrent);
-  teamContainer.find('.badge-important').text((10 - numAlive));
   teamContainer.find('.team-title').text(team.team);
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);
@@ -166,32 +144,41 @@ function buildTeam(team){
   return {html: teamContainer, points : total};
 }
 
+function dateStringFromGameId(gameId){
+  var dateOfGame = gameId.split('-').last().slice(0,8);
+  return dateOfGame.slice(0,4) + "/" + dateOfGame.slice(4,6) + "/" + dateOfGame.slice(6,8);
+}
+
 function buildPlayer(player, index){
   var total = 0;
-  var playerRow = $('#templates .player').clone();
+  var playerContainer = $('#templates .player-container').clone();
 
   var gameNum = 0;
-  _.each(player.points, function(points, gameId){
-    total += points;
-    playerRow.find('.game' + gameNum).append($('<a>').attr('href',"http://sports.yahoo.com/ncaab/" + gameId).text(points));
+  _.each(player.stats, function(stats, gameId){
     gameNum += 1;
+    var playerGame = $('#templates .player-game').clone();
+    var gameTotal = stats.points + stats.rebounds;
+    playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab/" + gameId).text(dateStringFromGameId(gameId)));
+    playerGame.find('.game-total').text(gameTotal);
+    _.each(stats, function(value, stat){
+      playerGame.find('.' + stat).text(value);
+    });
+    playerContainer.append(playerGame);
+    total += gameTotal
   });
 
   var round = index + 1;
-  playerRow.find('.player-round').text(round);
-  playerRow.find('.player-total').text(total);
-  playerRow.find('.player-name .name').data('round',round).text(player.name).hover(function(){
+  playerContainer.find('.player-round').text(round);
+  playerContainer.find('.player-total').text(total);
+  playerContainer.find('.player-name .name').data('round',round).text(player.name).hover(function(){
     $(this).text(player.team);
   }, function(){
     $(this).text(player.name);
   });
 
-  if(player.alive == false){
-    playerRow.addClass('lost');
-  }
   if(player.current == true){
-    playerRow.addClass('current');
+    playerContainer.addClass('current');
   }
 
-  return {html : playerRow, points : total, alive: player.alive, current: player.current};
+  return {html : playerContainer, points : total, current: player.current};
 }

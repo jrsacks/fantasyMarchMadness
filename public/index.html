@@ -12,14 +12,7 @@
   <body>
   <div class="navbar">
     <div class="navbar-inner">
-      <span class="brand">Fantasy March Madness <span class="year">2014</span> Standings</span>
-      <ul class="nav">
-        <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Historical Standings<b class="caret"></b> </a>
-        <ul class="dropdown-menu history-links">
-        </ul>
-        </li>
-      </ul>
+      <span class="brand">Big Ten Fantasy Basketball Standings</span>
       <span class="log-in pull-right">
         <form class="navbar-form" action="/" method="post">
           <button class="btn" type="submit">Sign In</button>
@@ -33,7 +26,6 @@
       </span>
     </div>
   </div>
-  <button type="button" class="btn hideshow">Hide Players</button> 
   <span class='updated'></span>
   <div class='teams container-fluid'></div>
   <script type="text/javascript">
@@ -43,33 +35,32 @@
     <div class="history-container">
       <div class="history-name"></div>
     </div>
-    <div class="history row">
+    <div class="history row-fluid">
       <div class="offset2 span2 history-year"></div>
       <div class="span2 history-points"></div>
       <div class="span2 history-place"></div>
     </div>
     <div class="team-container">
-      <div class="team row">
-        <span class="badge badge-success"></span>
-        <span class="badge badge-warning"></span>
-        <span class="badge badge-important"></span>
+      <div class="team row-fluid">
         <span class="team-title"></span>
         <span class="pull-right team-total"></span>
       </div>
     </div>
-    <div class="players"></div>
-    <div class="player row">
-      <div class="player-name">
-        <span class="player-round"></span>
-        <span class="name"></span>
+    <div class="players container-fluid"></div>
+    <div class='player-container'>
+      <div class='player-total-row row-fluid'>
+        <div class="player-name">
+          <span class="player-round"></span>
+          <span class="name"></span>
+        </div>
+        <div class="player-total pull-right"></div>
       </div>
-        <div class="game0 game"></div>
-        <div class="game1 game"></div>
-        <div class="game2 game"></div>
-        <div class="game3 game"></div>
-        <div class="game4 game"></div>
-        <div class="game5 game"></div>
-      <div class="player-total pull-right"></div>
+    </div>
+    <div class="player-game row-fluid">
+      <span class="game-link"></span>
+      <span class="points"></span>
+      <span class="rebounds"></span>
+      <span class="game-total pull-right"></span>
     </div>
   </div>
   </body>

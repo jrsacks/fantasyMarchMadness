@@ -58,7 +58,11 @@ body {
   vertical-align: bottom;
 }
 
-.player {
+.player-total-row {
+  margin-left: 10px;
+}
+  
+.player-game {
   margin-left: 40px;
 }
 
@@ -79,6 +83,11 @@ body {
 }
 
 .player-total {
+  width: 2em;
+  margin-right: 10px;
+}
+
+.game-total {
   width: 2em;
   margin-right: 10px;
 }
