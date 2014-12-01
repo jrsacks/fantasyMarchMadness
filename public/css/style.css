@@ -1,14 +1,9 @@
 .navbar {
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 }
 
 .navbar .brand {
   font-size: 24px;
-  padding-right: 25px;
-}
-
-.navbar .dropdown {
-  font-size: smaller;
 }
 
 .updated {
@@ -18,9 +13,7 @@
 
 .teams {
   margin-top: 10px;
-  margin-left: 15px;
-  margin-bottom: 5px;
-  width: 700px;
+  margin-bottom: 10px;
 }
 
 #templates {
@@ -32,74 +25,18 @@ body {
   font-size: larger;
 }
 
-.lost {
- color: rgb(200, 50, 50);
-}
-
 .current {
   background: rgb(255, 216, 94);
 } 
-
-.team {
-  padding-bottom: 2px;
-}
-
-.team:first-child{
-  margin-left: 20px;
-}
-
-.team .badge {
-  vertical-align: top;
-  min-width: 15px;
-  text-align: center;
-}
-
-.team-title {
-  vertical-align: bottom;
-}
-
-.player-total-row {
-  margin-left: 10px;
-}
-  
-.player-game {
-  margin-left: 40px;
-}
 
 .player-round {
   font-size: small;
 }
 
-.player-name {
-  width: 300px;
-  float: left;
-  margin-right 30px;
+.team {
+  font-size: 28px;
 }
 
-.game {
-  width: 2em;
-  float: left;
-  margin-left: 10px;
-}
-
-.player-total {
-  width: 2em;
-  margin-right: 10px;
-}
-
-.game-total {
-  width: 2em;
-  margin-right: 10px;
-}
-
-.team-total {
-  font-weight: bold;
-}
-
-.team:hover, .player:hover{
+.team:hover, .player-container .row-fluid:hover{
   background-color: white;
-}
-
-.hideshow {
-  margin: 5px;
 }

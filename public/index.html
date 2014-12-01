@@ -7,7 +7,7 @@
     <script language="javascript" type="text/javascript" src="/js/sugar.1.4.1.min.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/underscore.js" ></script>
     <script language="javascript" type="text/javascript" src="/scripts/standings.js" ></script>
-    <title>Fantasy March</title>
+    <title>B1G 10 Fantasy</title>
   </head>
   <body>
   <div class="navbar">
@@ -26,41 +26,38 @@
       </span>
     </div>
   </div>
+  <button type="button" class="btn hideshow-players">Show Players</button> 
+  <button type="button" class="btn hideshow-games">Show Games</button> 
   <span class='updated'></span>
   <div class='teams container-fluid'></div>
   <script type="text/javascript">
     $(document).ready(standingsOnLoad);
   </script>
   <div id="templates">
-    <div class="history-container">
-      <div class="history-name"></div>
-    </div>
-    <div class="history row-fluid">
-      <div class="offset2 span2 history-year"></div>
-      <div class="span2 history-points"></div>
-      <div class="span2 history-place"></div>
-    </div>
     <div class="team-container">
       <div class="team row-fluid">
-        <span class="team-title"></span>
-        <span class="pull-right team-total"></span>
+        <div class="team-title span10"></div>
+        <div class="span2 pull-right team-total"></div>
       </div>
     </div>
     <div class="players container-fluid"></div>
     <div class='player-container'>
       <div class='player-total-row row-fluid'>
-        <div class="player-name">
+        <div class="span10 player-name">
           <span class="player-round"></span>
           <span class="name"></span>
         </div>
-        <div class="player-total pull-right"></div>
+        <div class="span2 player-total"></div>
       </div>
+      <div class='player-games container-fluid'></div>
     </div>
     <div class="player-game row-fluid">
-      <span class="game-link"></span>
-      <span class="points"></span>
-      <span class="rebounds"></span>
-      <span class="game-total pull-right"></span>
+      <div class="span2 game-link"></div>
+      <div class="span1"></div>
+      <div class="span2 points"></div>
+      <div class="span2 rebounds"></div>
+      <div class="span3"></div>
+      <div class="span2 game-total"></div>
     </div>
   </div>
   </body>
