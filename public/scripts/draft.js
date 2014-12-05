@@ -216,7 +216,7 @@ function updatePlayerAutoComplete(){
 }
 
 $(document).ready(function(){
-  ws = new ReconnectingWebSocket('ws://' + window.location.hostname + ':4568');
+  ws = new ReconnectingWebSocket('ws://' + window.location.hostname + ':5679');
   ws.onmessage = handleMessage;
 
   $('#chat-text').keypress(function (e){

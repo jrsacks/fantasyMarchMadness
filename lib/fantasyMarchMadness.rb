@@ -21,6 +21,7 @@ class App < Sinatra::Base
   set :oauth2_api, oauth2_api
 
   set :bind, '0.0.0.0'
+  set :port, 5678
   set :importer, Importer.new
   set :scoreboard, @@scoreboard
 
@@ -178,7 +179,7 @@ end
 EM.run {
   connections = []
   scoreboard = @@scoreboard
-  EM::WebSocket.start(:host => "0.0.0.0", :port => 4568) do |ws|
+  EM::WebSocket.start(:host => "0.0.0.0", :port => 5679) do |ws|
     ws.onopen { connections << ws }
     ws.onmessage do |msg| 
       parsed = JSON.parse(msg)
