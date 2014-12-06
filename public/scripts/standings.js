@@ -122,8 +122,8 @@ function buildPlayer(player, index){
   var gameNum = 0;
   _.each(player.stats, function(stats, gameId){
     gameNum += 1;
-    var playerGame = $('#templates .player-game').clone();
-    var gameTotal = stats.points + stats.rebounds;
+    var playerGame = $('#templates .player-game.details').clone();
+    var gameTotal = stats.points + stats.rebounds + stats.steals + stats.assists + stats.threes;
     playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     playerGame.find('.game-total').text(gameTotal);
     _.each(stats, function(value, stat){
