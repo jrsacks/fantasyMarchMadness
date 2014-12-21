@@ -92,9 +92,13 @@ function buildTeam(team){
   var total = 0;
   var teamPlayers = $('#templates .players').clone();
 
-  _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player){
+  _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player, i){
     teamPlayers.append(player.html);
-    total += player.points;
+    if(i < 8){
+      total += player.points;
+    } else {
+      player.html.addClass('not-countable');
+    }
   });
 
   var teamContainer = $('#templates .team-container').clone();
@@ -123,7 +127,7 @@ function buildPlayer(player, index){
   _.each(player.stats, function(stats, gameId){
     gameNum += 1;
     var playerGame = $('#templates .player-game.details').clone();
-    var gameTotal = stats.points + stats.rebounds + stats.steals + stats.assists + stats.threes;
+    var gameTotal = stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes;
     playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     playerGame.find('.game-total').text(gameTotal);
     _.each(stats, function(value, stat){

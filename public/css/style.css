@@ -40,3 +40,7 @@ body {
 .team:hover, .player-container .row-fluid:hover{
   background-color: white;
 }
+
+.not-countable {
+  color: rgb(181,181,181);
+}
