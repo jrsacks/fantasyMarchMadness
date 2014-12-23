@@ -105,7 +105,7 @@ function buildTeam(team){
   teamContainer.find('.team-title').text(team.team);
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);
-  teamContainer.find('.team.row').hover(function(){
+  teamContainer.find('.team.row-fluid').hover(function(){
     $(this).find('.team-title').text(team.name);
   }, function(){
     $(this).find('.team-title').text(team.team);
