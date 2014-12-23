@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+root_dir=`dirname $0`
+
+crontab -l | grep -v "#b1g" > tempCron
+$root_dir/buildCron.rb >> tempCron
+crontab tempCron
+rm tempCron

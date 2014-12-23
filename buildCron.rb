@@ -41,10 +41,9 @@ doc.css(".game").each do |game|
       hour = splitup.first.to_i - 1
     end
 
-    puts "#{min}-59 #{hour} * * * curl localhost:5678/game/#{gid}"
-    puts "* #{hour+1}-#{hour + 2} * * * curl localhost:5678/game/#{gid}"
-    puts "0-#{min} #{(hour+3)%24} * * * curl localhost:5678/game/#{gid}"
-    puts "\n"
+    puts "#{min}-59 #{hour} * * * curl localhost:5678/game/#{gid} #b1g"
+    puts "* #{hour+1}-#{hour + 2} * * * curl localhost:5678/game/#{gid} #b1g"
+    puts "0-#{min} #{(hour+3)%24} * * * curl localhost:5678/game/#{gid} #b1g"
   end
 end
 
