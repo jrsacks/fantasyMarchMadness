@@ -242,9 +242,12 @@ $(document).ready(function(){
           teamData = teams;
           $.getJSON('/standings', [], function(standings){
             _.each(standings, function(t, i){ 
-              var score =  _.reduce(t.players, function(total, p){ 
-                return total + _.reduce(p.points, function(sum, points){ 
-                  return sum + points;},0);
+              var scores = _.map(t.players, function(player){
+                var stats = player.stats;
+                return stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes;
+              });
+              var score = _.reduce(scores.sort().slice(2,10), function(total, s){
+                return total + s;
               }, 0);
               teamData[i].score = score;
             });
