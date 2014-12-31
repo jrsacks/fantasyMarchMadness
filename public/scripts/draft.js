@@ -243,7 +243,7 @@ $(document).ready(function(){
           $.getJSON('/standings', [], function(standings){
             _.each(standings, function(t, i){ 
               var scores = _.map(t.players, function(player){
-                var stats = _.reduce(player.stats, function(total, stats){;
+                return _.reduce(player.stats, function(total, stats){;
                   return total + stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes;
                 }, 0)
               });
