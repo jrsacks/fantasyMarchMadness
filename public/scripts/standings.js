@@ -92,25 +92,30 @@ function sortByPoints(arr){
 
 function buildTeam(team){
   var total = 0;
+  var games = 0;
   var teamPlayers = $('#templates .players').clone();
 
   _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player, i){
     teamPlayers.append(player.html);
     if(i < 8){
       total += player.points;
+      games += player.html.find('.player-game.details').length;
     } else {
       player.html.addClass('not-countable');
     }
   });
 
+  var projected = ((total / games) * 18 * 8).toPrecision(4);
   var teamContainer = $('#templates .team-container').clone();
   teamContainer.find('.team-title').text(team.team);
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);
   teamContainer.find('.team.row-fluid').hover(function(){
     $(this).find('.team-title').text(team.name);
+    $(this).find('.team-total').text(projected);
   }, function(){
     $(this).find('.team-title').text(team.team);
+    $(this).find('.team-total').text(total);
   });
 
   return {html: teamContainer, points : total};
