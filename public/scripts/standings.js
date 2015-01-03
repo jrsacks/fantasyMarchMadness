@@ -23,6 +23,7 @@ function setupHideShowClickHandler(){
       if($(this).text() == 'Hide ' + text){
         $(this).text('Show ' + text);
         $(selector).hide();
+        $('.current .player-game:last-child').show();
       }
       else {
         $(this).text('Hide ' + text);
@@ -71,6 +72,7 @@ function loadStandings(year){
     }
     if($('.hideshow-games').text() == 'Show Games'){
       $('.player-game').hide();
+      $('.current .player-game:last-child').show();
     }
   });
 }
