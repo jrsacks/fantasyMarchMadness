@@ -146,11 +146,14 @@ function buildPlayer(player, index){
 
   var round = index + 1;
   playerContainer.find('.player-round').text(round);
-  playerContainer.find('.player-total').text(total);
-  playerContainer.find('.player-name .name').data('round',round).text(player.name).hover(function(){
+  var numberOfGames = playerContainer.find('.details').length;
+  var average = (total / numberOfGames).toPrecision(3);
+  playerContainer.find('.player-total').text(total + " (" + average + ")");
+  var nameText = player.name + " (" + numberOfGames + ")";
+  playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){
     $(this).text(player.team);
   }, function(){
-    $(this).text(player.name);
+    $(this).text(nameText);
   });
   if(player.current == true){
     playerContainer.addClass('current');
