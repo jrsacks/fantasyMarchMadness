@@ -67,8 +67,10 @@ class Scoreboard
 
   def update_game(game_id, box_score)
     box_score[:players].each do |player|
-      @players[player[:id]]["current"] = true
-      @players[player[:id]]["stats"].merge!({game_id => player})
+      if @players[player[:id]]
+        @players[player[:id]]["current"] = true
+        @players[player[:id]]["stats"].merge!({game_id => player})
+      end
     end
     if box_score[:final]
       change_current box_score[:players]
