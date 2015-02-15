@@ -61,7 +61,9 @@ class Scoreboard
   
   def change_current(players)
     players.each do |player|
-      @players[player[:id]]["current"] = false
+      if @players[player[:id]]
+        @players[player[:id]]["current"] = false
+      end
     end
   end
 
