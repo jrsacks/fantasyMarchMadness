@@ -6,30 +6,34 @@ require 'open-uri'
 tv = ["CBS","TBS","TNT","TRU"]
 date = ARGV[0] || Time.now.to_s.split(' ').first
 doc = Nokogiri::HTML(open("http://sports.yahoo.com/college-basketball/scoreboard/?conf=all&date=#{date}"))
-doc.css(".game").each do |game|
-  if tv.include? game.css('.tv').text
-    time = game.css('.time').text
-    gid = game.attr("data-url").gsub("/ncaab/","").gsub("/","")
-    hour = 0
-    min = 0
-    splitup = time.split(' ').first.split(':')
-    min = splitup.last 
-    if time.match(/pm/i)
-      if splitup.first.to_i == 12
-        hour = 11 
-      else
-        hour = splitup.first.to_i + 11
-      end
-    else
-      hour = splitup.first.to_i - 1
-    end
+games = doc.css(".game")
+tv_games = games.select do |game|
+  tv.include? game.css('.tv').text
+end
 
-    #if num tables > 8, divide by 2 for all cron
-    puts "#{min}-59 #{hour} * * * curl localhost:4567/game/#{gid}"
-    puts "* #{hour+1}-#{hour + 2} * * * curl localhost:4567/game/#{gid}"
-    puts "0-#{min} #{(hour+3)%24} * * * curl localhost:4567/game/#{gid}"
-    puts "\n"
+tv_games.each do |game|
+  time = game.css('.time').text
+  gid = game.attr("data-url").gsub("/ncaab/","").gsub("/","")
+  hour = 0
+  min = 0
+  splitup = time.split(' ').first.split(':')
+  min = splitup.last 
+  if time.match(/pm/i)
+    if splitup.first.to_i == 12
+      hour = 11 
+    else
+      hour = splitup.first.to_i + 11
+    end
+  else
+    hour = splitup.first.to_i - 1
   end
+
+  #if num tables > 8, divide by 2 for all cron
+  dividor = "/2" if tv_games.length > 8
+  puts "#{min}-59#{dividor} #{hour} * * * curl localhost:4567/game/#{gid} #hts"
+  puts "*#{dividor} #{hour+1}-#{hour + 2} * * * curl localhost:4567/game/#{gid} #hts"
+  puts "0-#{min}#{dividor} #{(hour+3)%24} * * * curl localhost:4567/game/#{gid} #hts"
+  puts "\n"
 end
 
 #*    *    *    *    *  command to be executed
