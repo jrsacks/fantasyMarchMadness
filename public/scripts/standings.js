@@ -1,4 +1,5 @@
 function standingsOnLoad(){
+  addHistoryLinks();
   setupHideShowClickHandler();
   if(window.location.pathname === '/'){
     showDraftLinkToUsers();
@@ -15,6 +16,22 @@ function standingsOnLoad(){
       $('<li>').append(
         $('<a>').attr('href', '/').text('This Year')));
   }
+}
+
+function addHistoryLinks(){
+  $.getJSON('/data/years', function(years){
+    _.each(years.sort().reverse(), function(year){
+      $('.history-links').append(
+        $('<li>').append(
+          $('<a>').attr('href', '/history/' + year).text(year)));
+    });
+    //$('.history-links').append($('<li>').addClass('divider')).append(
+    //  $('<li>').append($('<a>').attr('href', '/history/Team').text('By Team')));
+    if(window.location.pathname === '/history/Team'){
+      $('.hideshow').hide();
+      displayHistoryByTeam();
+    }
+  });
 }
 
 function setupHideShowClickHandler(){
