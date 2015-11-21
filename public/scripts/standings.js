@@ -82,7 +82,7 @@ function loadStandings(year){
       hour = hour - 12
       ampm = 'PM';
     }
-    $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/2012 ' + 
+    $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/' + (d.getYear() + 1900) + ' ' + 
                       hour + ':' + twoDigit(d.getMinutes()) + ':' + twoDigit(d.getSeconds()) + ' ' + ampm);
     if($('.hideshow-players').text() == 'Show Players'){
       $('.player-container').hide();
