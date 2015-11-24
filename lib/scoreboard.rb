@@ -67,10 +67,22 @@ class Scoreboard
     end
   end
 
+  def find_winner(players)
+    teams = Hash.new { |h,k| h[k] = 0 }
+    players.each do |player|
+      team = @players[player[:id]]["team"]
+      teams[team] += player[:points]
+    end
+    teams.key(teams.values.max)
+  end
+
   def update_game(game_id, box_score)
+    winner = ''
+    winner = find_winner(box_score[:players]) if box_score[:final]
     box_score[:players].each do |player|
       if @players[player[:id]]
         @players[player[:id]]["current"] = true
+        player[:winner] = true if @players[player[:id]]["team"] == winner
         @players[player[:id]]["stats"].merge!({game_id => player})
       end
     end

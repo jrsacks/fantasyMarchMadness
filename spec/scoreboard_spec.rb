@@ -69,7 +69,7 @@ describe "Scoreboard" do
     end
 
     before(:each) do 
-      @final = true
+      @final = false
       add_player [{:id => "12346", :name => "D Rose", :team => "Memphis Tigers", :current => false},
         {:id => "12347", :name => "Other", :team => "Memphis Tigers", :current => false}]
       File.should_receive(:open).with(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'players.json')), 'w').and_yield players_file
@@ -88,7 +88,17 @@ describe "Scoreboard" do
       end
     end
 
-    it "changes current status based on game being final" do
+    it "adds in winner status when the game is final" do
+      @final = true
+      players_file.should_receive(:puts) do |player_data|
+        data = JSON.parse(player_data)
+        data["12345"]["stats"]["20120122"].should == {"id" => "12345", "points" => 22, "winner" => true}
+        data["12346"]["stats"]["20120122"].should == {"id" => "12346", "points" => 20}
+      end
+    end
+
+    it "sets current to false when the game is final" do
+      @final = true
       players_file.should_receive(:puts) do |player_data|
         data = JSON.parse(player_data)
         data["12345"]["current"].should == false
@@ -96,7 +106,7 @@ describe "Scoreboard" do
       end
     end
 
-    it "changes current status based on game being final" do
+    it "sets current to true when the game is final" do
       @final = false
       players_file.should_receive(:puts) do |player_data|
         data = JSON.parse(player_data)
