@@ -1,5 +1,6 @@
 $LOAD_PATH << File.join(Dir.getwd, 'lib')
-require 'sinatra'
+require 'thin'
+require 'sinatra/base'
 require 'importer'
 require 'scoreboard'
 require 'json'
@@ -174,6 +175,10 @@ class App < Sinatra::Base
       "Invalid Team"
     end
   end
+
+  def self.start
+    Thin::Server.start(App, settings.port)
+  end
 end
 
 EM.run {
@@ -198,5 +203,7 @@ EM.run {
     end
     ws.onclose { connections.delete ws}
   end
-  App.run!
+  App.start
+  Signal.trap("INT") { EM.stop }
+  Signal.trap("TRAP") { EM.stop }
 }
