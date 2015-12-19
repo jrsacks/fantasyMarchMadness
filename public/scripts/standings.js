@@ -1,12 +1,45 @@
+function currentYear(){
+  return window.location.pathname === '/';
+}
+
+function historicYear() {
+  return _.last(window.location.pathname.split('/'));
+}
+
+function teamTotal(players){
+  if(currentYear()){
+    return _.flatten(_.pluck(players, 'games')).sort().reverse().slice(0,(18*8)).sum();
+  } else {
+    if(historicYear() === '2015'){
+      return _.pluck(players.slice(0,8), 'points').sum();
+    }
+  }
+}
+
+function pointsForGame(stats){
+  var baseScore = (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes)
+  if(currentYear()){
+    var multiplier = 1;
+    if(stats.winner){
+      multiplier = 1.2;
+    }
+    return multiplier * baseScore;
+  } else {
+    if(historicYear() === '2015'){
+      return baseScore;
+    }
+  }
+}
+
 function standingsOnLoad(){
   addHistoryLinks();
   setupHideShowClickHandler();
-  if(window.location.pathname === '/'){
+  if(currentYear()){
     showDraftLinkToUsers();
     loadStandings();
     setInterval(loadStandings, 1000 * 60);
   } else {
-    var year = _.last(window.location.pathname.split('/'));
+    var year = historicYear();
     if (year.match(/20/)){
       loadStandings(year);
     }
@@ -108,31 +141,22 @@ function sortByPoints(arr){
 }
 
 function buildTeam(team){
-  var total = 0;
-  var games = 0;
   var teamPlayers = $('#templates .players').clone();
 
-  _.each(sortByPoints(_.map(team.players, buildPlayer)), function(player, i){
+  var sortedPlayers = sortByPoints(_.map(team.players, buildPlayer));
+  _.each(sortedPlayers, function(player, i){
     teamPlayers.append(player.html);
-    if(i < 8){
-      total += player.points;
-      games += player.html.find('.player-game.details').length;
-    } else {
-      player.html.addClass('not-countable');
-    }
   });
 
-  var projected = ((total / games) * 18 * 8).toPrecision(4);
+  var total = teamTotal(sortedPlayers);
   var teamContainer = $('#templates .team-container').clone();
   teamContainer.find('.team-title').text(team.team);
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);
   teamContainer.find('.team.row-fluid').hover(function(){
     $(this).find('.team-title').text(team.name);
-    $(this).find('.team-total').text(projected);
   }, function(){
     $(this).find('.team-title').text(team.team);
-    $(this).find('.team-total').text(total);
   });
 
   return {html: teamContainer, points : total};
@@ -144,6 +168,7 @@ function dateStringFromGameId(gameId){
 }
 
 function buildPlayer(player, index){
+  var gameTotals = [];
   var total = 0;
   var playerContainer = $('#templates .player-container').clone();
 
@@ -151,7 +176,7 @@ function buildPlayer(player, index){
   _.each(player.stats, function(stats, gameId){
     gameNum += 1;
     var playerGame = $('#templates .player-game.details').clone();
-    var gameTotal = stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes;
+    var gameTotal = pointsForGame(stats);
     playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     playerGame.find('.game-total').text(gameTotal);
     _.each(stats, function(value, stat){
@@ -159,6 +184,7 @@ function buildPlayer(player, index){
     });
     playerContainer.find('.player-games').append(playerGame);
     total += gameTotal
+    gameTotals.push(gameTotal);
   });
 
   var round = index + 1;
@@ -176,5 +202,5 @@ function buildPlayer(player, index){
     playerContainer.addClass('current');
   }
 
-  return {html : playerContainer, points : total, current: player.current};
+  return {html : playerContainer, points : total, current: player.current, games : gameTotals};
 }
