@@ -31,3 +31,4 @@ body { background: #BDBDBD; }
 .template { display: none;}
 .draft-player i, .draft-player a { vertical-align: middle; font-size: 14px;}
 .draft-player i { padding-right: 5px; cursor: pointer;}
+.draft-player i.no-padding {padding-right: 0px; }

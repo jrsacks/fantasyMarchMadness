@@ -21,9 +21,9 @@ function pointsForGame(stats){
   if(currentYear()){
     var multiplier = 1;
     if(stats.winner){
-      multiplier = 1.2;
+      multiplier = 1.4;
     }
-    return multiplier * baseScore;
+    return (multiplier * baseScore).toPrecision(3);
   } else {
     if(historicYear() === '2015'){
       return baseScore;

@@ -122,11 +122,6 @@ function addPickToChat(parsed) {
   scrollChat();
 }
 
-function removeFromWishList(playerId){
-  var player = playerText(playerData[playerId]);
-  $('.draft-player').filter(function(){return $(this).text() == player;}).parent().remove()
-}
-
 function nextPick(){
   var taken = draftedPlayers().length;
   var teams = teamData.length;
@@ -153,7 +148,7 @@ function handleDraftPick(parsed) {
   addPlayer(parsed.team, parsed.player)
   teamData[parsed.team - 1].players.push(parsed.player);
   updatePlayerAutoComplete();
-  removeFromWishList(parsed.player);
+  buildWishList(currentWishList());
   hideShowDraftButtons();
 }
 
@@ -187,6 +182,57 @@ function draftedPlayers(){
   return _.flatten(_.map(teamData, function(team) { return team.players; }));
 }
 
+function buildWishList(ids){
+  _.each(draftedPlayers(), function(drafted){
+    ids = _.without(ids, drafted);
+  });
+  console.log(ids);
+  var list = $('#player-list tbody');
+  list.find('tr').filter(function() { return $(this).attr('class') !== 'template';}).remove();
+  _.each(ids, function(thisId){
+    var newRow = list.find('.template').clone().removeClass('template');
+    newRow.data('id', thisId);
+    newRow.find('.name').text(playerText(playerData[thisId])).attr(playerLink(thisId));
+    newRow.find('.draft-button').click(function(){
+      makePick(ws, team, thisId);
+    });
+    newRow.find('.icon-remove').click(function(){
+      buildWishList(_.without(currentWishList(), thisId));
+    });
+    newRow.find('.icon-arrow-up').click(function(){
+      var wishList = currentWishList();
+      var indexOf = wishList.indexOf(thisId);
+      if(indexOf > 0){
+        wishList[indexOf] = wishList[indexOf - 1];
+        wishList[indexOf - 1] = thisId;
+        buildWishList(wishList);
+      }
+    });
+    newRow.find('.icon-arrow-down').click(function(){
+      var wishList = currentWishList();
+      var indexOf = wishList.indexOf(thisId);
+      if(indexOf >= 0 && indexOf < (wishList.length - 1)){
+        wishList[indexOf] = wishList[indexOf + 1];
+        wishList[indexOf + 1] = thisId;
+        buildWishList(wishList);
+      }
+    });
+    list.append(newRow);
+  });
+  hideShowDraftButtons();
+  $.ajax({
+    type: "POST",
+    url: '/wishlist',
+    data: JSON.stringify(currentWishList()),
+    dataType: "json",
+    contentType: "application/json"
+  });
+}
+
+function currentWishList(){
+  return $('#player-list tr').map(function(){ return $(this).data('id'); }).toArray();
+}
+
 function updatePlayerAutoComplete(){
   var drafted = draftedPlayers();
   var undrafted = _.filter(playerData, function(player, id){
@@ -194,24 +240,9 @@ function updatePlayerAutoComplete(){
   });
   $('#player-search').unautocomplete().autocomplete(_.map(undrafted, playerText), {matchContains : true, max : 20});
   $('#player-search').result(function(){
-    var playerNameText = $(this).val();
-    var newRow = $('#player-list tbody .template').clone().removeClass('template');
-    newRow.find('.name').text(playerNameText).attr(playerLink(idFromName($(this).val())));
-    newRow.find('.draft-button').click(function(){
-      makePick(ws, team, idFromName($(this).closest('tr').find('.name').text()));
-      $('.draft-button').hide();
-    });
-    newRow.find('.icon-remove').click(function(){
-      newRow.remove();
-    });
-    
-    $('#player-list tbody tr').filter(function(){
-      return $(this).find('.name').text() === playerNameText;
-    }).remove();
-
-    $('#player-list tbody').prepend(newRow);
+    var thisId = idFromName($(this).val());
+    buildWishList(_.uniq(currentWishList().concat(thisId)));
     $(this).val('');
-    hideShowDraftButtons();
   });
 }
 
@@ -256,6 +287,7 @@ $(document).ready(function(){
             addRowsToTeamTable();
             hideShowDraftButtons();
             updatePlayerAutoComplete()
+            $.getJSON('/wishlist', buildWishList);
           });
         });
       });
