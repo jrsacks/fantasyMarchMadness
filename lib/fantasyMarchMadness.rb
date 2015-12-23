@@ -175,6 +175,20 @@ class App < Sinatra::Base
     end
   end
 
+  post '/wishlist' do
+    name = session[:user]["displayName"]
+    list = request.body.read.to_s
+    File.open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")), 'w') do |f|
+      f.puts list.to_s
+    end
+    list
+  end
+
+  get '/wishlist' do
+    name = session[:user]["displayName"]
+    File.read(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")))
+  end
+
   def self.start
     Thin::Server.start(App, settings.port)
   end
