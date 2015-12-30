@@ -8,7 +8,7 @@ function historicYear() {
 
 function teamTotal(players){
   if(currentYear()){
-    return _.flatten(sortByPoints(_.pluck(players, 'games'))).slice(0,(18*8)).sum().toPrecision(3);
+    return _.flatten(sortByPoints(_.pluck(players, 'games'))).slice(0,(18*8)).sum().toFixed(1);
   } else {
     if(historicYear() === '2015'){
       return _.pluck(players.slice(0,8), 'points').sum();
@@ -178,10 +178,13 @@ function buildPlayer(player, index){
     var playerGame = $('#templates .player-game.details').clone();
     var gameTotal = pointsForGame(stats);
     playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
-    playerGame.find('.game-total').text(gameTotal.toPrecision(3));
+    playerGame.find('.game-total').text(gameTotal.toFixed(1));
     _.each(stats, function(value, stat){
       playerGame.find('.' + stat).text(value);
     });
+    if(stats.winner){
+      playerGame.find('.winner').text('*1.4');
+    }
     playerContainer.find('.player-games').append(playerGame);
     total += gameTotal
     gameTotals.push(gameTotal);
@@ -190,8 +193,8 @@ function buildPlayer(player, index){
   var round = index + 1;
   playerContainer.find('.player-round').text(round);
   var numberOfGames = playerContainer.find('.details').length || 1;
-  var average = (total / numberOfGames).toPrecision(3);
-  playerContainer.find('.player-total').text(total.toPrecision(3) + " (" + average + ")");
+  var average = (total / numberOfGames).toFixed(1);
+  playerContainer.find('.player-total').text(total.toFixed(1) + " (" + average + ")");
   var nameText = player.name + " (" + numberOfGames + ")";
   playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){
     $(this).text(player.team);
