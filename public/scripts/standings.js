@@ -183,7 +183,7 @@ function buildPlayer(player, index){
       playerGame.find('.' + stat).text(value);
     });
     if(stats.winner){
-      playerGame.find('.winner').text('*1.4');
+      playerGame.addClass('winner');
     }
     playerContainer.find('.player-games').append(playerGame);
     total += gameTotal
@@ -192,8 +192,8 @@ function buildPlayer(player, index){
 
   var round = index + 1;
   playerContainer.find('.player-round').text(round);
-  var numberOfGames = playerContainer.find('.details').length || 1;
-  var average = (total / numberOfGames).toFixed(1);
+  var numberOfGames = playerContainer.find('.details').length;
+  var average = (total / (numberOfGames || 1)).toFixed(1);
   playerContainer.find('.player-total').text(total.toFixed(1) + " (" + average + ")");
   var nameText = player.name + " (" + numberOfGames + ")";
   playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){

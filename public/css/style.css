@@ -44,3 +44,7 @@ body {
 .not-countable {
   color: rgb(181,181,181);
 }
+
+.winner {
+  color: #0060B7;
+}
