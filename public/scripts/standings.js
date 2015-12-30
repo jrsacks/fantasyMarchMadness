@@ -8,7 +8,7 @@ function historicYear() {
 
 function teamTotal(players){
   if(currentYear()){
-    return _.flatten(_.pluck(players, 'games')).sort().reverse().slice(0,(18*8)).sum().toPrecision(3);
+    return _.flatten(sortByPoints(_.pluck(players, 'games'))).slice(0,(18*8)).sum().toPrecision(3);
   } else {
     if(historicYear() === '2015'){
       return _.pluck(players.slice(0,8), 'points').sum();

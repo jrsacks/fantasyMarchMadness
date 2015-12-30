@@ -273,15 +273,16 @@ $(document).ready(function(){
           teamData = teams;
           $.getJSON('/standings', [], function(standings){
             _.each(standings, function(t, i){ 
-              var scores = _.map(t.players, function(player){
-                return _.reduce(player.stats, function(total, stats){;
-                  return total + stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes;
-                }, 0)
-              });
-              var score = _.reduce(scores.sort().slice(2,10), function(total, s){
-                return total + s;
-              }, 0);
-              teamData[i].score = score;
+              var games = _.flatten(_.map(t.players, function(player){
+                return _.map(player.stats, function(stats){
+                  var multiplier = 1;
+                  if(stats.winner) { 
+                    multiplier = 1.4;
+                  }
+                  return multiplier * (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
+                });
+              }));
+              teamData[i].score = _.sortBy(games, function(g){ return -g;}).slice(0,144).sum();
             });
             setTeam();
             addRowsToTeamTable();
