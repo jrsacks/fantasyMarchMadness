@@ -16,6 +16,15 @@ function teamTotal(players){
   }
 }
 
+function projectedTeamInfo(players){
+  if(currentYear()){
+    var games = _.flatten(sortByPoints(_.pluck(players, 'games')));
+    var avg = (teamTotal(players) / games.length).toFixed(1);
+    return ' (' + games.length + ' ' + avg + ')';
+  }
+  return '';
+}
+
 function pointsForGame(stats){
   var baseScore = (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes)
   if(currentYear()){
@@ -151,7 +160,7 @@ function buildTeam(team){
   var total = teamTotal(sortedPlayers);
   var teamContainer = $('#templates .team-container').clone();
   teamContainer.find('.team-title').text(team.team);
-  teamContainer.find('.team-total').text(total);
+  teamContainer.find('.team-total').text(total + projectedTeamInfo(sortedPlayers));
   teamContainer.append(teamPlayers);
   teamContainer.find('.team.row-fluid').hover(function(){
     $(this).find('.team-title').text(team.name);
