@@ -48,7 +48,7 @@ function displayHistoryByTeam(){
       row.find('.history-year').text("Avg:");
       var points = teamContainer.find('.history-points').map(function(){ return parseInt($(this).text(), 10);}).toArray();
       var place = teamContainer.find('.history-place').map(function(){ return parseInt($(this).text(), 10);}).toArray();
-      row.find('.history-points').text(points.average());
+      row.find('.history-points').text(points.average().round(2));
       row.find('.history-place').text(place.average().round(2));
       teamContainer.append(row);
 
