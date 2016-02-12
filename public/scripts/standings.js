@@ -8,7 +8,7 @@ function historicYear() {
 
 function teamTotal(players){
   if(currentYear()){
-    return _.flatten(sortByPoints(_.pluck(players, 'games'))).slice(0,(18*8)).sum().toFixed(1);
+    return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   } else {
     if(historicYear() === '2015'){
       return _.pluck(players.slice(0,8), 'points').sum();
@@ -16,10 +16,15 @@ function teamTotal(players){
   }
 }
 
-function projectedTeamInfo(players){
+function sortedGameScores(players){
+  return _.sortBy(_.flatten(_.pluck(players, 'games')), function(g){ return -g;});
+}
+
+function projectedTeamInfo(total, players){
   if(currentYear()){
-    var games = _.flatten(sortByPoints(_.pluck(players, 'games')));
-    var avg = (teamTotal(players) / games.length).toFixed(1);
+    var games = sortedGameScores(players);
+    var avg = (total / games.length).toFixed(1);
+    //var min = games.slice(0,144).min().toFixed(1);
     return ' (' + games.length + ' ' + avg + ')';
   }
   return '';
@@ -160,7 +165,7 @@ function buildTeam(team){
   var total = teamTotal(sortedPlayers);
   var teamContainer = $('#templates .team-container').clone();
   teamContainer.find('.team-title').text(team.team);
-  teamContainer.find('.team-total').text(total + projectedTeamInfo(sortedPlayers));
+  teamContainer.find('.team-total').text(total + projectedTeamInfo(total, sortedPlayers));
   teamContainer.append(teamPlayers);
   teamContainer.find('.team.row-fluid').hover(function(){
     $(this).find('.team-title').text(team.name);
