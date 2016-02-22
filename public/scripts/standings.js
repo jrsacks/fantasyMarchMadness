@@ -24,8 +24,11 @@ function projectedTeamInfo(total, players){
   if(currentYear()){
     var games = sortedGameScores(players);
     var avg = (total / games.length).toFixed(1);
-    //var min = games.slice(0,144).min().toFixed(1);
-    return ' (' + games.length + ' ' + avg + ')';
+    var min = games.slice(0,144).min().toFixed(1);
+    if(games.length < 144){
+      min = 0;
+    }
+    return ' (' + min + ')';
   }
   return '';
 }
