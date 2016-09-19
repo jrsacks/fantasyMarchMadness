@@ -1,45 +1,16 @@
 #!/usr/bin/env ruby
 
-require 'nokogiri'
+require 'json'
 require 'open-uri'
 
-teams = [
-  "illinois-fighting-illini",
-  "indiana-hoosiers",
-  "iowa-hawkeyes",
-  "maryland-terrapins",
-  "michigan-state-spartans",
-  "michigan-wolverines",
-  "minnesota-golden-gophers",
-  "nebraska-cornhuskers",
-  "northwestern-wildcats",
-  "ohio-state-buckeyes",
-  "penn-state-nittany-lions",
-  "purdue-boilermakers",
-  "rutgers-scarlet-knights",
-  "wisconsin-badgers"
-]
-
 date = ARGV[0] || Time.now.to_s.split(' ').first
-doc = Nokogiri::HTML(open("http://sports.yahoo.com/college-basketball/scoreboard/?conf=3&date=#{date}"))
-doc.css(".game").each do |game|
-  conf_teams = teams.select { |t| game.attr("data-url").match(t) }
-  if conf_teams.length == 2
-    time = game.css('.time').text
-    gid = game.attr("data-url").gsub("/ncaab/","").gsub("/","")
-    hour = 0
-    min = 0
-    splitup = time.split(' ').first.split(':')
-    min = splitup.last 
-    if time.match(/pm/i)
-      if splitup.first.to_i == 12
-        hour = 11 
-      else
-        hour = splitup.first.to_i + 11
-      end
-    else
-      hour = splitup.first.to_i - 1
-    end
+data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?leagues=ncaab&conferences=3&date=#{date}").read)
+teams = data["service"]["scoreboard"]["teams"]
+data["service"]["scoreboard"]["games"].each do |gid, game|
+  if teams[game["home_team_id"]]["conference_id"] == "3" && teams[game["away_team_id"]]["conference_id"] == "3"
+    start_time = DateTime.parse(game["start_time"]).to_time
+    hour = start_time.hour
+    min = start_time.min
 
     puts "#{min}-59 #{hour} * * * curl localhost:5678/game/#{gid} #b1g"
     puts "* #{hour+1}-#{hour + 2} * * * curl localhost:5678/game/#{gid} #b1g"
