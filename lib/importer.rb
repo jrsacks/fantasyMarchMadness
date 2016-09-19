@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
+require 'json'
 
 class Importer
   def initialize
@@ -8,14 +9,12 @@ class Importer
   def game(url)
     box = {:final => false, :players => []}
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/ncaab#{url}"))
-      box[:final] = true if doc.css('.score.winner').length > 0
-      doc.css('.data-container table tbody .athlete').each do |player|
-        idMatch = player.css('a').attr('href').value.match(/[0-9]+/)[0]
-        points = player.parent().css('.points-scored').text.to_i
-        box[:players] << {:id => idMatch, :points => points}
+      data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/boxscore/#{url}").read)
+      box[:final] = true if data["service"]["boxscore"]["game"]["status_type"] === "status.type.final"
+      data["service"]["boxscore"]["player_stats"].each do |k, val|
+        points = val["ncaab.stat_variation.2"]["ncaab.stat_type.13"].to_i
+        box[:players] << {:id => k, :points => points}
       end
-
     rescue => e
       puts "Caught exception finding points for game #{url}: #{e}"
     end
@@ -23,17 +22,13 @@ class Importer
   end
 
   def date(id)
-    games = []
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/college-basketball/scoreboard?date=#{id}"))
-      doc.css('.game').each do |game|
-        games << game.attr('data-url').to_s
-      end
+      data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?leagues=ncaab&date=#{id}").read)
+      return data["games"].keys
     rescue => e
       puts "Caught exception finding games for date #{id}: #{e}"
+      return []
     end
-
-    games
   end
 
   def all_teams
@@ -54,15 +49,12 @@ class Importer
   def players_on_team(abbrev)
     players = []
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/ncaab/teams/#{abbrev}/roster"))
-      teamname = doc.search("title").first.inner_html.split(' -').first
-      teamname.gsub!(" on Yahoo! Sports","")
-      doc.search("td a").each do |a|
-        if a.to_html.match(/ncaab\/players\//)
-          name = a.inner_html.split(', ').reverse.join(' ')
-          id = a['href'].match(/[0-9]+/)[0]
-          players << {:id => id, :name => name, :team => teamname}
-        end
+      id_data = JSON.parse(open("http://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
+      team_id = id_data["teamdefault_league"].keys.first
+      data = JSON.parse(open("http://sports.yahoo.com/site/api/resource/sports.team.roster;id=#{team_id}").read)
+      teamname = data["team"]["full_name"]
+      data["players"].each do |k, val|
+        players << {:id => k, :name => val["display_name"], :team => teamname}
       end
     rescue => e
       puts "Caught exception finding all the players for #{abbrev}: #{e}"

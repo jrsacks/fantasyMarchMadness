@@ -121,8 +121,8 @@ class App < Sinatra::Base
 
   #load game with id
   get '/game/:id' do |url|
-    game = settings.importer.game("/#{url}/")
-    settings.scoreboard.update_game("/#{url}/", game)
+    game = settings.importer.game("#{url}")
+    settings.scoreboard.update_game("#{url}", game)
     game.to_json
   end
 
