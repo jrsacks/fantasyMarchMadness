@@ -7,7 +7,7 @@ function historicYear() {
 }
 
 function teamTotal(players){
-  if(currentYear()){
+  if(currentYear() || historicYear() === '2016'){
     return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   } else {
     if(historicYear() === '2015'){
@@ -21,10 +21,10 @@ function sortedGameScores(players){
 }
 
 function projectedTeamInfo(total, players){
-  if(currentYear()){
+  if(currentYear() || historicYear() === '2016'){
     var games = sortedGameScores(players);
     var avg = (total / games.length).toFixed(1);
-    var min = games.slice(0,144).min().toFixed(1);
+    var min = (games.slice(0,144).min() || 0).toFixed(1);
     if(games.length < 144){
       min = 0;
     }
@@ -35,7 +35,7 @@ function projectedTeamInfo(total, players){
 
 function pointsForGame(stats){
   var baseScore = (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes)
-  if(currentYear()){
+  if(currentYear() || historicYear() === '2016'){
     var multiplier = 1;
     if(stats.winner){
       multiplier = 1.4;
