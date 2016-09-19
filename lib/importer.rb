@@ -1,26 +1,25 @@
 require 'nokogiri'
 require 'open-uri'
+require 'json'
 
 class Importer
   def game(url)
     box = {:final => false, :players => []}
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/ncaab#{url}"))
-      box[:final] = true if doc.css('.score.winner').length > 0
-      doc.css('.data-container table tbody .athlete').each do |player|
-        idMatch = player.css('a').attr('href').value.match(/[0-9]+/)[0]
-        player_row = player.parent()
+      data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/boxscore/#{url}").read)
+      box[:final] = true if data["service"]["boxscore"]["game"]["status_type"] === "status.type.final"
+      data["service"]["boxscore"]["player_stats"].each do |k, val|
+        stats = val["ncaab.stat_variation.2"]
         box[:players] << {
-          :id => idMatch, 
-          :points => player_row.css('.points-scored').text.to_i,
-          :threes => player_row.css('.three-pointers').text.split('-').first.to_i,
-          :rebounds => player_row.css('.total-rebounds').text.to_i,
-          :assists => player_row.css('.assists').text.to_i,
-          :steals => player_row.css('.steals').text.to_i,
-          :blocks => player_row.css('.blocked-shots').text.to_i
+          :id => k, 
+          :points => stats["ncaab.stat_type.13"].to_i,
+          :threes => stats["ncaab.stat_type.30"].to_i,
+          :rebounds => stats["ncaab.stat_type.16"].to_i,
+          :assists => stats["ncaab.stat_type.17"].to_i,
+          :steals => stats["ncaab.stat_type.18"].to_i,
+          :blocks => stats["ncaab.stat_type.19"].to_i
         }
       end
-
     rescue => e
       puts "Caught exception finding points for game #{url}: #{e}"
     end
@@ -28,17 +27,13 @@ class Importer
   end
 
   def date(id)
-    games = []
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/college-basketball/scoreboard?date=#{id}"))
-      doc.css('.game').each do |game|
-        games << game.attr('data-url').to_s
-      end
+      data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?leagues=ncaab&date=#{id}").read)
+      return data["games"].keys
     rescue => e
       puts "Caught exception finding games for date #{id}: #{e}"
+      return []
     end
-
-    games
   end
 
   def all_teams
@@ -59,15 +54,12 @@ class Importer
   def players_on_team(abbrev)
     players = []
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/ncaab/teams/#{abbrev}/roster"))
-      teamname = doc.search("title").first.inner_html.split(' -').first
-      teamname.gsub!(" on Yahoo! Sports","")
-      doc.search("td a").each do |a|
-        if a.to_html.match(/ncaab\/players\//)
-          name = a.inner_html.split(', ').reverse.join(' ')
-          id = a['href'].match(/[0-9]+/)[0]
-          players << {:id => id, :name => name, :team => teamname}
-        end
+      id_data = JSON.parse(open("http://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
+      team_id = id_data["teamdefault_league"].keys.first
+      data = JSON.parse(open("http://sports.yahoo.com/site/api/resource/sports.team.roster;id=#{team_id}").read)
+      teamname = data["team"]["full_name"]
+      data["players"].each do |k, val|
+        players << {:id => k, :name => val["display_name"], :team => teamname}
       end
     rescue => e
       puts "Caught exception finding all the players for #{abbrev}: #{e}"
