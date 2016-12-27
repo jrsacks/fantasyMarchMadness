@@ -194,7 +194,7 @@ function buildPlayer(player, index){
     gameNum += 1;
     var playerGame = $('#templates .player-game.details').clone();
     var gameTotal = pointsForGame(stats);
-    playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
+    playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStringFromGameId(stats.boxscore)));
     playerGame.find('.game-total').text(gameTotal.toFixed(1));
     _.each(stats, function(value, stat){
       playerGame.find('.' + stat).text(value);

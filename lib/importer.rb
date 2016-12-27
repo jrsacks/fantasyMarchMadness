@@ -8,16 +8,18 @@ class Importer
     begin
       data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/boxscore/#{url}").read)
       box[:final] = true if data["service"]["boxscore"]["game"]["status_type"] === "status.type.final"
+      boxscore = data["service"]["boxscore"]["game"]["navigation_links"]["boxscore"]
       data["service"]["boxscore"]["player_stats"].each do |k, val|
         stats = val["ncaab.stat_variation.2"]
         box[:players] << {
-          :id => k.split('.').last, 
+          :id => k.split('.').last,
           :points => stats["ncaab.stat_type.13"].to_i,
           :threes => stats["ncaab.stat_type.30"].to_i,
           :rebounds => stats["ncaab.stat_type.16"].to_i,
           :assists => stats["ncaab.stat_type.17"].to_i,
           :steals => stats["ncaab.stat_type.18"].to_i,
-          :blocks => stats["ncaab.stat_type.19"].to_i
+          :blocks => stats["ncaab.stat_type.19"].to_i,
+          :boxscore => boxscore
         }
       end
     rescue => e
