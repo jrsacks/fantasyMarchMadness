@@ -24,6 +24,9 @@ function projectedTeamInfo(total, players){
   if(currentYear() || historicYear() === '2016'){
     var games = sortedGameScores(players);
     var avg = (total / games.length).toFixed(1);
+    return ' (' + avg + ')';
+  }
+  if(historicYear() === '2016'){
     var min = (games.slice(0,144).min() || 0).toFixed(1);
     if(games.length < 144){
       min = 0;
