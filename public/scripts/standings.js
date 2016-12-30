@@ -103,6 +103,7 @@ function setupHideShowClickHandler(){
   }
   setup('players','Players','.player-container');
   setup('games','Games','.player-game');
+  setup('undrafted','Undrafted','.undrafted-container .player-container');
 }
 
 function showDraftLinkToUsers() {
@@ -143,6 +144,24 @@ function loadStandings(year){
     if($('.hideshow-games').text() == 'Show Games'){
       $('.player-game').hide();
       $('.current .player-game:last-child').show();
+    }
+    if(currentYear()){
+      $.getJSON('/data/players', (players) => {
+        var names = _.flatten(_.map(teams, (t) => _.map(t.players, 'name')));
+        var undrafted = _.filter(players, (p) => names.indexOf(p.name) === -1);
+
+        var players = $('#templates .players').clone();
+        var sortedPlayers = sortByPoints(_.map(undrafted, (player, idx) => buildPlayer(player, -1)));
+        _.each(sortedPlayers, function(player, i){
+          players.append(player.html);
+        });
+        $('.undrafted-container').empty().append(players);
+        if($('.hideshow-undrafted').text() == 'Show Undrafted'){
+          $('.undrafted-container .player-container').hide();
+        } else {
+          $('.undrafted-container .player-container').show();
+        }
+      });
     }
   });
 }
