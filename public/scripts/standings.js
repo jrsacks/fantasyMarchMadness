@@ -101,7 +101,7 @@ function setupHideShowClickHandler(){
       }
     });
   }
-  setup('players','Players','.player-container');
+  setup('players','Players','.teams .player-container');
   setup('games','Games','.player-game');
   setup('undrafted','Undrafted','.undrafted-container .player-container');
 }
