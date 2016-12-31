@@ -21,8 +21,8 @@ function sortedGameScores(players){
 }
 
 function projectedTeamInfo(total, players){
+  var games = sortedGameScores(players);
   if(currentYear()){
-    var games = sortedGameScores(players);
     var avg = (total / games.length).toFixed(1);
     return ' (' + games.length + ' - ' + avg + ')';
   }
