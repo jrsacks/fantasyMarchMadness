@@ -21,10 +21,10 @@ function sortedGameScores(players){
 }
 
 function projectedTeamInfo(total, players){
-  if(currentYear() || historicYear() === '2016'){
+  if(currentYear()){
     var games = sortedGameScores(players);
     var avg = (total / games.length).toFixed(1);
-    return ' (' + avg + ')';
+    return ' (' + games.length + ' - ' + avg + ')';
   }
   if(historicYear() === '2016'){
     var min = (games.slice(0,144).min() || 0).toFixed(1);
