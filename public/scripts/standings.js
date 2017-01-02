@@ -139,7 +139,7 @@ function loadStandings(year){
     $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/' + (d.getYear() + 1900) + ' ' + 
                       hour + ':' + twoDigit(d.getMinutes()) + ':' + twoDigit(d.getSeconds()) + ' ' + ampm);
     if($('.hideshow-players').text() == 'Show Players'){
-      $('.player-container').hide();
+      $('.teams .player-container').hide();
     }
     if($('.hideshow-games').text() == 'Show Games'){
       $('.player-game').hide();
