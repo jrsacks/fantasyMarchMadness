@@ -45,7 +45,7 @@ class App < Sinatra::Base
     )
   end
 
-  ['/draft', '/'].each do |path|
+  ['/waiver', '/draft', '/'].each do |path|
     post path do
       if session[:user]
         redirect to(path) 
@@ -90,8 +90,10 @@ class App < Sinatra::Base
   end
 
   #serve draft page
-  get '/draft' do
-    File.read(File.join('public', 'draft.html'))
+  ['draft', 'waiver'].each do |page|
+    get "/#{page}" do
+      File.read(File.join('public', "#{page}.html"))
+    end
   end
 
   get '/userInfo' do
@@ -207,6 +209,13 @@ EM.run {
       end
       if parsed["type"] == "rename"
         scoreboard.new_team_name(parsed["team"], parsed["newName"])
+      end
+      if parsed["type"] == "waive"
+        scoreboard.waive_player_on_team(parsed["team"], parsed["player"])
+      end
+      if parsed["type"] == "pickup"
+        scoreboard.new_player_on_team(parsed["team"], parsed["player"])
+        scoreboard.pickup_player_on_team(parsed["team"], parsed["player"])
       end
       if parsed["message"]
         File.open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'chat.json')), 'a') do |f|

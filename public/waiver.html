@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css">
+    <link href="css/draft.css" rel="stylesheet">
+    <script language="javascript" type="text/javascript" src="/scripts/jquery-1.9.1.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/jquery.autocomplete.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/reconnecting-websocket.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/underscore.js" ></script>
+    <script language="javascript" type="text/javascript" src="/js/sugar.1.4.1.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/waiver.js" ></script>
+    <title>Fantasy March Waiver Wire</title>
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <span class="brand">Fantasy March Waiver Wire</span>
+      <span class="log-in pull-right">
+        <form action="/draft" method="post">
+          <button class="btn btn-primary" type="submit">Sign In</button>
+        </form>
+      </span>
+    </div>
+  </div>
+  <div class="container-fluid hide">
+    <div class="row-fluid team-row">
+      <div id="team-list">
+        <table class="table table-bordered table-light table-hover table-condensed">
+          <thead>
+            <tr>
+              <th class="round-num"></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row-fluid chat-row">
+      <div class="hero-unit chat-container span6">
+        <div class='chat'>
+        </div>
+        <input id="chat-text" class="input-block-level" type="text" placeholder=""></input>
+      </div>
+      <div class="span6">
+        <input id="player-search" class="input-xxlarge" placeholder="Search for Players to Pickup"></input>
+        <span class='timer'>0</span>
+        <div id="player-list">
+          <table class="table table-bordered table-light table-condensed">
+            <tbody>
+            <tr class="template">
+              <td class="draft-player">
+                <i title="Remove Player From Wish List" class="icon-remove"></i>
+                <i class="no-padding icon-arrow-up"></i>
+                <i class="no-padding icon-arrow-down"></i>
+                <a class="name"></a>
+              </td>
+              <td><button class="pull-right draft-button btn btn-success btn-small">Pickup</button></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>

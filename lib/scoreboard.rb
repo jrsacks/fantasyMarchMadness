@@ -44,6 +44,24 @@ class Scoreboard
     File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
   end
 
+  def waive_player_on_team(team_id, player_id)
+    @teams.each do |team|
+      waived = team['waived'] || []
+      waived << player_id if team["id"] == team_id
+      team.merge!({'waived' => waived})
+    end
+    File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
+  end
+
+  def pickup_player_on_team(team_id, player_id)
+    @teams.each do |team|
+      pickup = team['pickup'] || []
+      pickup << player_id if team["id"] == team_id
+      team.merge!({'pickup' => pickup})
+    end
+    File.open(@team_file, 'w') { |f| f.puts @teams.to_json  }
+  end
+
   def new_team_name(team_id, name)
     @teams.each do |team|
       team['team'] = name if team["id"] == team_id
