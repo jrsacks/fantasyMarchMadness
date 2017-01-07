@@ -201,8 +201,12 @@ function buildTeam(team){
   return {html: teamContainer, points : total};
 }
 
+function dateFromGameId(gameId){
+  return gameId.split('-').last().slice(0,8);
+}
+
 function dateStringFromGameId(gameId){
-  var dateOfGame = gameId.split('-').last().slice(0,8);
+  var dateOfGame = dateFromGameId(gameId);
   return dateOfGame.slice(0,4) + "/" + dateOfGame.slice(4,6) + "/" + dateOfGame.slice(6,8);
 }
 
@@ -228,12 +232,28 @@ function buildPlayer(player, index){
     if(stats.winner){
       playerGame.addClass('winner');
     }
-    playerContainer.find('.player-games').append(playerGame);
-    total += gameTotal
-    gameTotals.push(gameTotal);
+    function addGame(){
+      playerContainer.find('.player-games').append(playerGame)
+      total += gameTotal
+      gameTotals.push(gameTotal);
+    }
+    
+    if(currentYear() && (player.waived || player.pickup)){
+      var waiveDate = "20170130";
+      var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
+      if( (player.waived && dateOfGame < waiveDate) ||
+          (player.pickup && dateOfGame > waiveDate)) {
+        addGame();
+      }
+    } else {
+      addGame();
+    }
   });
 
   var round = index + 1;
+  if(player.waived) {
+    round += 'w';
+  }
   playerContainer.find('.player-round').text(round);
   var numberOfGames = playerContainer.find('.details').length;
   var average = (total / (numberOfGames || 1)).toFixed(1);

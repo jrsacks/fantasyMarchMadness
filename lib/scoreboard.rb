@@ -13,7 +13,12 @@ class Scoreboard
   def standings
     #FIXME cache this?  may not matter
     @teams.map do |team|
-      players = team["players"].map { |id| @players[id] }
+      players = team["players"].map do |id| 
+        p = @players[id] 
+        p["waived"] = true if (team["waived"] || []).include?(id)
+        p["pickup"] = true if (team["pickup"] || []).include?(id)
+        p
+      end
       {"team" => team["team"], "players" => players, "name" => team["name"] || team["team"]}
     end
   end

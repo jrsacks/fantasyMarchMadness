@@ -34,6 +34,18 @@ describe "Scoreboard" do
     scoreboard.standings.should == [{"team"=>"Jeff's Team", "players"=> [players["12345"]], 'name' => "Jeff's Team"}]
   end
 
+  it "finds player info with waived data" do
+    teams[0]["waived"] = ["12345"]
+    teams_file.stub(:read).and_return teams.to_json
+    scoreboard.standings[0]["players"][0]["waived"].should == true
+  end
+
+  it "finds player info with pickup data" do
+    teams[0]["pickup"] = ["12345"]
+    teams_file.stub(:read).and_return teams.to_json
+    scoreboard.standings[0]["players"][0]["pickup"].should == true
+  end
+
   it "can add a new team" do
     new_team = {"team" => "new team", "players" => []}
     new_team_with_id = new_team.merge({"id" => 2})
