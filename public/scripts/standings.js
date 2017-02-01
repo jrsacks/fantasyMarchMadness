@@ -243,6 +243,9 @@ function buildPlayer(player, index){
     
     if(currentYear() && (player.waived || player.pickup)){
       var waiveDate = "20170130";
+      if(player.team.match(/Maryland/) || player.team.match(/Wisconsin/)){
+        waiveDate = "20170201";
+      }
       var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
       if( (player.waived && dateOfGame < waiveDate) ||
           (player.pickup && dateOfGame > waiveDate)) {
