@@ -270,7 +270,7 @@ function buildPlayer(player, index){
   }, function(){
     $(this).text(nameText);
   });
-  if(player.current == true){
+  if(player.current == true && player.waived !== true){
     playerContainer.addClass('current');
   }
 
