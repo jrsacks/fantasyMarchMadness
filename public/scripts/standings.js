@@ -23,8 +23,12 @@ function sortedGameScores(players){
 function projectedTeamInfo(total, players){
   var games = sortedGameScores(players);
   if(currentYear()){
-    var avg = (total / games.length).toFixed(1);
-    return ' (' + games.length + ' - ' + avg + ')';
+    if(games.length < 144) {
+      var avg = (total / games.length).toFixed(1);
+      return ' (' + games.length + ' - ' + avg + ')';
+    } else {
+      return ' (' + games.slice(0,144).min() + ')';
+    }
   }
   if(historicYear() === '2016'){
     var min = (games.slice(0,144).min() || 0).toFixed(1);
