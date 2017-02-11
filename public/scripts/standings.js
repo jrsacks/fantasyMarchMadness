@@ -27,7 +27,7 @@ function projectedTeamInfo(total, players){
       var avg = (total / games.length).toFixed(1);
       return ' (' + games.length + ' - ' + avg + ')';
     } else {
-      return ' (' + games.slice(0,144).min() + ')';
+      return ' (' + games.slice(0,144).min().toFixed(1) + ')';
     }
   }
   if(historicYear() === '2016'){
