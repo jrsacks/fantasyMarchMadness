@@ -200,7 +200,7 @@ end
 EM.run {
   connections = []
   scoreboard = @@scoreboard
-  EM::WebSocket.start(:host => "0.0.0.0", :port => 5679) do |ws|
+  EM::WebSocket.start(:host => "127.0.0.1", :port => 5680) do |ws|
     ws.onopen { connections << ws }
     ws.onmessage do |msg| 
       parsed = JSON.parse(msg)
