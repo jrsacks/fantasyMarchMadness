@@ -56,12 +56,11 @@ function pointsForGame(stats){
 }
 
 function standingsOnLoad(){
-  addHistoryLinks();
   setupHideShowClickHandler();
   if(currentYear()){
-    showDraftLinkToUsers();
     loadStandings();
     setInterval(loadStandings, 1000 * 60);
+    showDraftLinkToUsers();
   } else {
     var year = historicYear();
     if (year.match(/20/)){
@@ -73,6 +72,7 @@ function standingsOnLoad(){
       $('<li>').append(
         $('<a>').attr('href', '/').text('This Year')));
   }
+  addHistoryLinks();
 }
 
 function addHistoryLinks(){
