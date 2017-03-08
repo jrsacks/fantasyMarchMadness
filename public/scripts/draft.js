@@ -6,16 +6,6 @@ var playerData = {};
 var standingsData = {};
 var teamData = []
 
-function setTeam() {
-  var email = userData.emails[0].value;
-  var teamMatch = _.find(teamData, function(teamObj){
-    return teamObj.email === email;
-  });
-  if(teamMatch){
-    team = teamMatch.id
-  }
-}
-
 function userFromTeamData() {
   return userData.displayName;
 }
@@ -136,12 +126,7 @@ function nextPick(){
 }
 
 function hideShowDraftButtons(){
-  $('.draft-button').hide();
-  if(nextPick() == team){
-    $('.draft-button').show();
-  }
-  $('#team-list thead th').removeClass('current-pick');
-  $($('#team-list thead th')[nextPick()]).addClass('current-pick');
+  $('.draft-button').show();
 }
 
 function handleDraftPick(parsed) {
@@ -220,13 +205,6 @@ function buildWishList(ids){
     list.append(newRow);
   });
   hideShowDraftButtons();
-  $.ajax({
-    type: "POST",
-    url: '/wishlist',
-    data: JSON.stringify(currentWishList()),
-    dataType: "json",
-    contentType: "application/json"
-  });
 }
 
 function currentWishList(){
@@ -247,7 +225,7 @@ function updatePlayerAutoComplete(){
 }
 
 $(document).ready(function(){
-  ws = new ReconnectingWebSocket('wss://' + window.location.hostname + ':4568');
+  ws = new ReconnectingWebSocket('wss://' + window.location.hostname + ':4569');
   ws.onmessage = handleMessage;
 
   $('#chat-text').keypress(function (e){
@@ -257,37 +235,35 @@ $(document).ready(function(){
     }
   });
 
-  $.getJSON('/userInfo', function(result){
-    userData = result;
-    if(_.keys(userData).length > 0){
-      $('.log-in').hide();
-      $('.hide').removeClass('hide');
-      $.get('/data/chat', function(chatMessages){
-        _.each(_.without(chatMessages.split('\n'), ''), function(message){
-          addMessageToChat(JSON.parse(message));
-        });
-      });
-      $.getJSON('/data/players', function(players){
-        playerData = players;
-        $.getJSON('/data/teams', function(teams){
-          teamData = teams;
-          $.getJSON('/standings', [], function(standings){
-            _.each(standings, function(t, i){ 
-              var score =  _.reduce(t.players, function(total, p){ 
-                return total + _.reduce(p.points, function(sum, points){ 
-                  return sum + points;},0);
-              }, 0);
-              teamData[i].score = score;
+  $('.hide').removeClass('hide');
+  $.get('/data/chat', function(chatMessages){
+    _.each(_.without(chatMessages.split('\n'), ''), function(message){
+      addMessageToChat(JSON.parse(message));
+    });
+  });
+  $.getJSON('/data/players', function(players){
+    playerData = players;
+    $.getJSON('/data/teams', function(teams){
+      teamData = teams;
+      $.getJSON('/standings', [], function(standings){
+        _.each(standings, function(t, i){ 
+          var games = _.flatten(_.map(t.players, function(player){
+            return _.map(player.stats, function(stats){
+              var multiplier = 1;
+              if(stats.winner) { 
+                multiplier = 1.4;
+              }
+              return multiplier * (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
             });
-            setTeam();
-            addRowsToTeamTable();
-            hideShowDraftButtons();
-            updatePlayerAutoComplete()
-            $.getJSON('/wishlist', buildWishList);
-          });
+          }));
+          teamData[i].score = _.sortBy(games, function(g){ return -g;}).slice(0,144).sum();
         });
+        addRowsToTeamTable();
+        hideShowDraftButtons();
+        updatePlayerAutoComplete()
+        buildWishList([]);
       });
-    }
+    });
   });
 
   $(window).resize(function(){scrollChat(true);});

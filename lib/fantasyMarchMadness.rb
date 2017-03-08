@@ -5,78 +5,17 @@ require 'importer'
 require 'scoreboard'
 require 'json'
 require 'em-websocket'
-require 'google/api_client'
 
 @@scoreboard = Scoreboard.new
 
 class App < Sinatra::Base
   use Rack::Session::Cookie
 
-  client = Google::APIClient.new
-  client.authorization.client_id = ENV["CLIENT_ID"]
-  client.authorization.client_secret = ENV["CLIENT_SECRET"]
-  client.authorization.scope = 'email'
-  oauth2_api = client.discovered_api('plus')
-
-  set :api_client, client
-  set :oauth2_api, oauth2_api
-
   set :bind, '0.0.0.0'
   set :importer, Importer.new
   set :scoreboard, @@scoreboard
 
   set :public_folder, File.dirname(__FILE__) + '/../public'
-
-  def api_client
-    settings.api_client
-  end
-
-  def oauth2_api
-    settings.oauth2_api
-  end
-
-  def user_credentials
-    @authorization ||= (
-      auth = api_client.authorization.dup
-      auth.redirect_uri = to('/oauth2callback')
-      auth.update_token!(session)
-      auth
-    )
-  end
-
-  ['/draft', '/'].each do |path|
-    post path do
-      if session[:user]
-        redirect to(path) 
-      else
-        redirect to('/oauth2authorize')
-      end
-    end
-  end
-
-  get '/login' do
-    unless session[:user]
-      result = api_client.execute(:api_method => oauth2_api.people.get,
-                                  :parameters => {'userId' => 'me'},
-                                  :authorization => user_credentials)
-      puts session[:user] = result.data.to_hash
-    end
-    redirect to('/')
-  end
-
-  get '/oauth2authorize' do
-    redirect user_credentials.authorization_uri.to_s, 303
-  end
-
-  get '/oauth2callback' do
-    user_credentials.code = params[:code] if params[:code]
-    user_credentials.fetch_access_token!
-    session[:access_token] = user_credentials.access_token
-    session[:refresh_token] = user_credentials.refresh_token
-    session[:expires_in] = user_credentials.expires_in
-    session[:issued_at] = user_credentials.issued_at
-    redirect to('/login')
-  end
 
   get '/' do
     content_type :html
@@ -173,20 +112,6 @@ class App < Sinatra::Base
     else
       "Invalid Team"
     end
-  end
-
-  post '/wishlist' do
-    name = session[:user]["displayName"]
-    list = request.body.read.to_s
-    File.open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")), 'w') do |f|
-      f.puts list.to_s
-    end
-    list
-  end
-
-  get '/wishlist' do
-    name = session[:user]["displayName"]
-    File.read(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")))
   end
 
   def self.start
