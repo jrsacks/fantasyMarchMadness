@@ -13,7 +13,7 @@ class Importer
       box[:final] = true if data["service"]["boxscore"]["game"]["status_type"] === "status.type.final"
       data["service"]["boxscore"]["player_stats"].each do |k, val|
         points = val["ncaab.stat_variation.2"]["ncaab.stat_type.13"].to_i
-        box[:players] << {:id => k.split('.').last, :points => points}
+        box[:players] << {:id => k, :points => points}
       end
     rescue => e
       puts "Caught exception finding points for game #{url}: #{e}"
