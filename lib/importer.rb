@@ -41,7 +41,7 @@ class Importer
   def all_teams
     teams = []
     begin
-      doc = Nokogiri::HTML(open("http://sports.yahoo.com/ncaa/basketball/teams"))
+      doc = Nokogiri::HTML(open("https://sports.yahoo.com/ncaa/basketball/teams"))
       doc.search("a").each do |line|
         if line.to_html.match(/ncaab\/teams\//)
           teams << line.to_html.match(/ncaab\/teams\/(.*)\"/)[1]
@@ -56,9 +56,9 @@ class Importer
   def players_on_team(abbrev)
     players = []
     begin
-      id_data = JSON.parse(open("http://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
+      id_data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
       team_id = id_data["teamdefault_league"].keys.first
-      data = JSON.parse(open("http://sports.yahoo.com/site/api/resource/sports.team.roster;id=#{team_id}").read)
+      data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.team.roster;id=#{team_id}").read)
       teamname = data["team"]["full_name"]
       data["players"].each do |k, val|
         players << {:id => k, :name => val["display_name"], :team => teamname}
