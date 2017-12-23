@@ -11,14 +11,21 @@ class Importer
       boxscore = data["service"]["boxscore"]["game"]["navigation_links"]["boxscore"]["url"]
       data["service"]["boxscore"]["player_stats"].each do |k, val|
         stats = val["ncaab.stat_variation.2"]
+        threes = stats["ncaab.stat_type.30"].split('-')
+        free_throws = stats["ncaab.stat_type.29"].split('-')
         box[:players] << {
-          :id => k.split('.').last,
+          :id => k,
           :points => stats["ncaab.stat_type.13"].to_i,
-          :threes => stats["ncaab.stat_type.30"].to_i,
+          :threes => threes[0],
+          :threes_attempted => threes[1],
           :rebounds => stats["ncaab.stat_type.16"].to_i,
           :assists => stats["ncaab.stat_type.17"].to_i,
           :steals => stats["ncaab.stat_type.18"].to_i,
           :blocks => stats["ncaab.stat_type.19"].to_i,
+          :turnovers => stats["ncaab.stat_type.20"].to_i,
+          :fouls => stats["ncaab.stat_type.22"].to_i,
+          :fts => free_throws[0],
+          :fts_attempted => free_throws[1],
           :boxscore => boxscore
         }
       end
