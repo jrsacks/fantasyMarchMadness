@@ -183,8 +183,9 @@ function buildPlayer(player, index){
     } else {
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     }
+    playerGame.find('.base').text(basePointsForGame(stats));
+    playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
     playerGame.find('.game-total').text(gameTotal.toFixed(1));
-    playerGame.find('.game-total').attr('title', multiplierForGame(stats).toFixed(2));
     _.each(stats, function(value, stat){
       playerGame.find('.' + stat).text(value);
     });

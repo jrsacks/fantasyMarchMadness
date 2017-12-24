@@ -77,9 +77,11 @@ function multiplierForGame(stats){
   }
 }
 
+function basePointsForGame(stats){
+  return (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
+}
 function pointsForGame(stats){
-  var baseScore = (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
-  return baseScore * multiplierForGame(stats);
+  return basePointsForGame(stats) * multiplierForGame(stats);
 }
 
 function shouldAddGame(player, stats){
