@@ -5,6 +5,8 @@ var userData = {};
 var playerData = {};
 var standingsData = {};
 var teamData = []
+function currentYear() { return true;}
+function historicYear() { return "";}
 
 function setTeam() {
   var email = userData.emails[0].value;
@@ -273,16 +275,11 @@ $(document).ready(function(){
           teamData = teams;
           $.getJSON('/standings', [], function(standings){
             _.each(standings, function(t, i){ 
-              var games = _.flatten(_.map(t.players, function(player){
-                return _.map(player.stats, function(stats){
-                  var multiplier = 1;
-                  if(stats.winner) { 
-                    multiplier = 1.4;
-                  }
-                  return multiplier * (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
-                });
-              }));
-              teamData[i].score = _.sortBy(games, function(g){ return -g;}).slice(0,144).sum();
+              var players = _.map(t.players, function(player){
+                var playerGames = _.filter(player.stats, s => shouldAddGame(player, s));
+                return {games: _.map(playerGames, pointsForGame)};
+              });
+              teamData[i].score = teamTotal(players);
             });
             setTeam();
             addRowsToTeamTable();
