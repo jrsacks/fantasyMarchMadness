@@ -6,55 +6,6 @@ function historicYear() {
   return _.last(window.location.pathname.split('/'));
 }
 
-function teamTotal(players){
-  if(currentYear() || historicYear() === '2016' || historicYear() === '2017'){
-    return sortedGameScores(players).slice(0,144).sum().toFixed(1);
-  } else {
-    if(historicYear() === '2015'){
-      return _.pluck(players.slice(0,8), 'points').sum();
-    }
-  }
-}
-
-function sortedGameScores(players){
-  return _.sortBy(_.flatten(_.pluck(players, 'games')), function(g){ return -g;});
-}
-
-function projectedTeamInfo(total, players){
-  var games = sortedGameScores(players);
-  if(currentYear()){
-    if(games.length < 144) {
-      var avg = (total / games.length).toFixed(1);
-      return ' (' + games.length + ' - ' + avg + ')';
-    } else {
-      return ' (' + games.slice(0,144).min().toFixed(1) + ')';
-    }
-  }
-  if(historicYear() === '2016'){
-    var min = (games.slice(0,144).min() || 0).toFixed(1);
-    if(games.length < 144){
-      min = 0;
-    }
-    return ' (' + min + ')';
-  }
-  return '';
-}
-
-function pointsForGame(stats){
-  var baseScore = (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes)
-  if(currentYear() || historicYear() === '2016' || historicYear() === '2017'){
-    var multiplier = 1;
-    if(stats.winner){
-      multiplier = 1.4;
-    }
-    return (multiplier * baseScore);
-  } else {
-    if(historicYear() === '2015'){
-      return baseScore;
-    }
-  }
-}
-
 function standingsOnLoad(){
   setupHideShowClickHandler();
   if(currentYear()){
@@ -227,36 +178,24 @@ function buildPlayer(player, index){
     gameNum += 1;
     var playerGame = $('#templates .player-game.details').clone();
     var gameTotal = pointsForGame(stats);
-    if(currentYear() || historicYear() === '2017'){
+    if(stats.boxscore){
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStringFromGameId(stats.boxscore)));
     } else {
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     }
     playerGame.find('.game-total').text(gameTotal.toFixed(1));
+    playerGame.find('.game-total').attr('title', multiplierForGame(stats).toFixed(2));
     _.each(stats, function(value, stat){
       playerGame.find('.' + stat).text(value);
     });
     if(stats.winner){
       playerGame.addClass('winner');
     }
-    function addGame(){
+    
+    if(shouldAddGame(player, stats)){
       playerContainer.find('.player-games').append(playerGame)
       total += gameTotal
       gameTotals.push(gameTotal);
-    }
-    
-    if(historicYear() === 2017 && (player.waived || player.pickup)){
-      var waiveDate = "20170130";
-      if(player.team.match(/Maryland/) || player.team.match(/Wisconsin/)){
-        waiveDate = "20170201";
-      }
-      var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
-      if( (player.waived && dateOfGame < waiveDate) ||
-          (player.pickup && dateOfGame > waiveDate)) {
-        addGame();
-      }
-    } else {
-      addGame();
     }
   });
 

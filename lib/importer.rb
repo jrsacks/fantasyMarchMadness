@@ -16,16 +16,16 @@ class Importer
         box[:players] << {
           :id => k,
           :points => stats["ncaab.stat_type.13"].to_i,
-          :threes => threes[0],
-          :threes_attempted => threes[1],
+          :threes => threes[0].to_i,
+          :threes_attempted => threes[1].to_i,
           :rebounds => stats["ncaab.stat_type.16"].to_i,
           :assists => stats["ncaab.stat_type.17"].to_i,
           :steals => stats["ncaab.stat_type.18"].to_i,
           :blocks => stats["ncaab.stat_type.19"].to_i,
           :turnovers => stats["ncaab.stat_type.20"].to_i,
           :fouls => stats["ncaab.stat_type.22"].to_i,
-          :fts => free_throws[0],
-          :fts_attempted => free_throws[1],
+          :fts => free_throws[0].to_i,
+          :fts_attempted => free_throws[1].to_i,
           :boxscore => boxscore
         }
       end
