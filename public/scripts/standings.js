@@ -7,7 +7,7 @@ function historicYear() {
 }
 
 function teamTotal(players){
-  if(currentYear() || historicYear() === '2016'){
+  if(currentYear() || historicYear() === '2016' || historicYear() === '2017'){
     return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   } else {
     if(historicYear() === '2015'){
@@ -42,7 +42,7 @@ function projectedTeamInfo(total, players){
 
 function pointsForGame(stats){
   var baseScore = (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes)
-  if(currentYear() || historicYear() === '2016'){
+  if(currentYear() || historicYear() === '2016' || historicYear() === '2017'){
     var multiplier = 1;
     if(stats.winner){
       multiplier = 1.4;
@@ -227,7 +227,7 @@ function buildPlayer(player, index){
     gameNum += 1;
     var playerGame = $('#templates .player-game.details').clone();
     var gameTotal = pointsForGame(stats);
-    if(currentYear()){
+    if(currentYear() || historicYear() === '2017'){
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStringFromGameId(stats.boxscore)));
     } else {
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
@@ -245,7 +245,7 @@ function buildPlayer(player, index){
       gameTotals.push(gameTotal);
     }
     
-    if(currentYear() && (player.waived || player.pickup)){
+    if(historicYear() === 2017 && (player.waived || player.pickup)){
       var waiveDate = "20170130";
       if(player.team.match(/Maryland/) || player.team.match(/Wisconsin/)){
         waiveDate = "20170201";
