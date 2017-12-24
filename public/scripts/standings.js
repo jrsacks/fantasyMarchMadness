@@ -1,5 +1,5 @@
 function currentYear(){
-  return window.location.pathname === '/' || historicYear() === '2017';
+  return window.location.pathname === '/' || historicYear() === '2018';
 }
 
 function historicYear() {
