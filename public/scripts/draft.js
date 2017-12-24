@@ -11,7 +11,7 @@ function setTeam() {
   var teamMatch = _.find(teamData, function(teamObj){
     return teamObj.email === email;
   });
-  if(teamMatch){
+  if(!team && teamMatch){
     team = teamMatch.id
   }
 }
