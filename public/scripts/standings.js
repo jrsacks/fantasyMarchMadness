@@ -102,6 +102,7 @@ function loadStandings(year){
     if($('.hideshow-games').text() == 'Show Games'){
       $('.player-game').hide();
       $('.current .player-game:last-child').show();
+      $('.today').show();
     }
     if(currentYear()){
       $.getJSON('/data/players', (players) => {
@@ -182,6 +183,9 @@ function buildPlayer(player, index){
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStringFromGameId(stats.boxscore)));
     } else {
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
+    }
+    if(playerGame.find('.game-link').text() == new Date().format("{yyyy}/{MM}/{dd}")){
+      playerGame.addClass('today');
     }
     playerGame.find('.base').text(basePointsForGame(stats));
     playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
