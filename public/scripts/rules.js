@@ -84,6 +84,11 @@ function pointsForGame(stats){
   return basePointsForGame(stats) * multiplierForGame(stats);
 }
 
+function dateStringFromGameId(gameId){
+  var dateOfGame = dateFromGameId(gameId);
+  return dateOfGame.slice(0,4) + "/" + dateOfGame.slice(4,6) + "/" + dateOfGame.slice(6,8);
+}
+
 function shouldAddGame(player, stats){
   if(player.waived || player.pickup){
     var waiveDate = "";
