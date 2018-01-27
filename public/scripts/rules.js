@@ -84,6 +84,10 @@ function pointsForGame(stats){
   return basePointsForGame(stats) * multiplierForGame(stats);
 }
 
+function dateFromGameId(gameId){
+  return gameId.split('-').last().slice(0,8);
+}
+
 function dateStringFromGameId(gameId){
   var dateOfGame = dateFromGameId(gameId);
   return dateOfGame.slice(0,4) + "/" + dateOfGame.slice(4,6) + "/" + dateOfGame.slice(6,8);
