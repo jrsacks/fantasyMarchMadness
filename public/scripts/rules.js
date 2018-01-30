@@ -99,7 +99,7 @@ function shouldAddGame(player, stats){
 
     if(currentYear()){
       waiveDate = "20180129";
-      if(player.team.match(/Nebraska/) || player.team.match(/Michigan$/)){
+      if(player.team.match(/Nebraska/) || player.team.match(/Michigan/)){
         waiveDate = "20180126";
       }
       if(player.team.match(/Illinois/) || player.team.match(/Wisconsin/) || player.team.match(/Northwestern/)){
