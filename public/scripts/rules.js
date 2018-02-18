@@ -16,16 +16,18 @@ function teamTotal(players){
 function projectedTeamInfo(total, players){
   var year = historicYear();
   var games = sortedGameScores(players);
-  var avg = (total / games.length).toFixed(1);
   if(currentYear() && games.length > 0){
     if(games.length < 128) {
+      var avg = (total / games.length).toFixed(1);
       return ' (' + games.length + ' - ' + avg + ')';
     } else {
+      var avg = (total / 128).toFixed(1);
       return ' (' + avg + ' - ' + games.slice(0,128).min().toFixed(1) + ')';
     }
   }
   if(year === '2016' || year === '2017'){
     var min = (games.slice(0,144).min() || 0).toFixed(1);
+    var avg = (total / 144).toFixed(1);
     if(games.length < 144){
       min = 0;
     }
