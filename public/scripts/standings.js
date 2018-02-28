@@ -151,6 +151,8 @@ function buildTeam(team){
   var teamContainer = $('#templates .team-container').clone();
   teamContainer.find('.team-alive').text(numAlive);
   teamContainer.find('.team-title').text(team.team);
+  teamContainer.find('.badge-warning').text(numCurrent);
+  teamContainer.find('.badge-important').text((10 - numAlive));
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);
   teamContainer.find('.team.row').hover(function(){
