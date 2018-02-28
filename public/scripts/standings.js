@@ -116,8 +116,6 @@ function loadStandings(year){
       hour = hour - 12
       ampm = 'PM';
     }
-    $('.updated').text("Last Updated at: " + (d.getMonth() + 1) + '/' + d.getDate() + '/2012 ' + 
-                      hour + ':' + twoDigit(d.getMinutes()) + ':' + twoDigit(d.getSeconds()) + ' ' + ampm);
     if($('.hideshow').text() == 'Show Players'){
       $('.players').hide();
     }
@@ -151,9 +149,7 @@ function buildTeam(team){
   });
 
   var teamContainer = $('#templates .team-container').clone();
-  teamContainer.find('.badge-success').text(numAlive);
-  teamContainer.find('.badge-warning').text(numCurrent);
-  teamContainer.find('.badge-important').text((10 - numAlive));
+  teamContainer.find('.team-alive').text(numAlive);
   teamContainer.find('.team-title').text(team.team);
   teamContainer.find('.team-total').text(total);
   teamContainer.append(teamPlayers);

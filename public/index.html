@@ -15,11 +15,12 @@
       <span class="brand">Fantasy March Madness <span class="year">2018</span> Standings</span>
       <ul class="nav">
         <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Historical Standings<b class="caret"></b> </a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">History<b class="caret"></b> </a>
         <ul class="dropdown-menu history-links">
         </ul>
         </li>
       </ul>
+      <button type="button" class="btn hideshow">Hide Players</button> 
       <span class="log-in pull-right">
         <form class="navbar-form" action="/" method="post">
           <button class="btn" type="submit">Sign In</button>
@@ -33,8 +34,6 @@
       </span>
     </div>
   </div>
-  <button type="button" class="btn hideshow">Hide Players</button> 
-  <span class='updated'></span>
   <div class='teams container-fluid'></div>
   <script type="text/javascript">
     $(document).ready(standingsOnLoad);
@@ -50,16 +49,15 @@
     </div>
     <div class="team-container">
       <div class="team row">
-        <span class="badge badge-success"></span>
-        <span class="badge badge-warning"></span>
-        <span class="badge badge-important"></span>
+        <span class="team-total"></span>
+        <span class="team-alive"></span>
         <span class="team-title"></span>
-        <span class="pull-right team-total"></span>
       </div>
     </div>
     <div class="players"></div>
     <div class="player row">
       <div class="player-name">
+        <span class="player-total"></span>
         <span class="player-round"></span>
         <span class="name"></span>
       </div>
@@ -69,7 +67,6 @@
         <div class="game3 game"></div>
         <div class="game4 game"></div>
         <div class="game5 game"></div>
-      <div class="player-total pull-right"></div>
     </div>
   </div>
   </body>
