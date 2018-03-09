@@ -62,6 +62,12 @@ body {
   margin-left: 40px;
 }
 
+.team-alive {
+  font-size: small;
+  width: 15px;
+  display: inline-block;
+}
+
 .player-round {
   font-size: small;
 }
@@ -79,12 +85,14 @@ body {
 }
 
 .player-total {
+  display: inline-block;
   width: 2em;
-  margin-right: 10px;
+  text-align: right;
+  margin-right: 5px;
 }
 
 .team-total {
-  font-weight: bold;
+  font-size: 28px;
 }
 
 .team:hover, .player:hover{
