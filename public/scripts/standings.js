@@ -171,7 +171,11 @@ function buildPlayer(player, index){
   var gameNum = 0;
   _.each(player.points, function(points, gameId){
     total += points;
-    playerRow.find('.game' + gameNum).append($('<a>').attr('href',"http://sports.yahoo.com/ncaab/" + gameId).text(points));
+    if(gameId[0] === "/"){
+      playerRow.find('.game' + gameNum).append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(points));
+    } else {
+      playerRow.find('.game' + gameNum).append($('<a>').attr('href',"/boxscore/" + gameId).text(points));
+    }
     gameNum += 1;
   });
 

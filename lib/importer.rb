@@ -4,6 +4,7 @@ require 'json'
 
 class Importer
   def initialize
+    @boxscore_cache = {}
   end
 
   def game(url)
@@ -19,6 +20,22 @@ class Importer
       puts "Caught exception finding points for game #{url}: #{e}"
     end
     box
+  end
+
+  def boxscore_for(game_id)
+    if @boxscore_cache[game_id].nil?
+      id = game_id.match(/\d{12}/)[0]
+      year = id[0..3].to_i
+      if year < 2013
+        month = id[4..5]
+        day = id[6..7]
+        @boxscore_cache[game_id] = "https://www.sports-reference.com/cbb/boxscores/index.cgi?month=#{month}&day=#{day}&year=#{year}"
+      else
+        data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/boxscore/ncaab.g.#{id}").read)
+        @boxscore_cache[game_id] = "https://sports.yahoo.com" + data["service"]["boxscore"]["game"]["navigation_links"]["boxscore"]["url"]
+      end
+    end
+    @boxscore_cache[game_id]
   end
 
   def date(id)
