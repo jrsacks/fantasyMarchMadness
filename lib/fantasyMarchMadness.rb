@@ -148,6 +148,10 @@ class App < Sinatra::Base
     players.to_json
   end
 
+  get '/boxscore/:id' do |id|
+    redirect settings.importer.boxscore_for(id)
+  end
+
   get '/data/years' do
     Dir.glob('data/*/').map { |path| path.split('/').last }.to_json
   end
