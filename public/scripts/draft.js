@@ -175,7 +175,7 @@ function handleMessage(msg) {
 }
 
 function playerLink(id){
-  return {target: '_blank', href : 'http://rivals.yahoo.com/ncaa/basketball/players/' + id};
+  return {target: '_blank', href : 'http://sports.yahoo.com/ncaa/basketball/players/' + id.match(/\d+/)[0] + '/'};
 }
 
 function draftedPlayers(){
