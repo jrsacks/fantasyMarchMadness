@@ -78,7 +78,46 @@ function multiplierFor2018(stats){
 }
 
 function multiplierFor2019(stats){
-  return multiplierFor2018(stats);
+  var multiplier = 1;
+
+  if(stats.winner){
+    multiplier *= 1.4
+  }
+  if(stats.fouls === 5){
+    multiplier *= 0.7;
+  }
+
+  var overEight = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 8).length;
+  var overTen = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 10).length;
+
+  if(overEight > 2) {
+    multiplier *= 2;
+  } else if (overTen === 2){
+    multiplier *= 1.2
+  }
+
+  if(stats.fts_attempted >= 7 && ( (stats.fts / stats.fts_attempted) >= 0.9)){
+    multiplier *= 1.2
+  }
+
+  if(stats.fts_attempted >= 5 && ((stats.fts / stats.fts_attempted) < 0.5)){
+    multiplier *= 0.7
+  }
+
+  if(stats.fts_attempted >= 5 && ( (stats.fts / stats.fts_attempted) < 0.3)){
+    multiplier = 0;
+  }
+
+
+  if(stats.turnovers >= 6){
+    multiplier *= 0.5;
+  }
+
+  if(stats.threes_attempted >= 4 && ( (stats.threes / stats.threes_attempted) >= 0.8)){
+    multiplier *= 1.5
+  }
+
+  return multiplier;
 }
 
 function multiplierForGame(stats){
