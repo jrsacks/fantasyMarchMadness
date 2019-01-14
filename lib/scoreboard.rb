@@ -93,8 +93,10 @@ class Scoreboard
   def find_winner(players)
     teams = Hash.new { |h,k| h[k] = 0 }
     players.each do |player|
-      team = @players[player[:id]]["team"]
-      teams[team] += player[:points]
+      if @players[player[:id]]
+        team = @players[player[:id]]["team"]
+        teams[team] += player[:points]
+      end
     end
     teams.key(teams.values.max)
   end
