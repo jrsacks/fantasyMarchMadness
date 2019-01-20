@@ -151,6 +151,20 @@ function dateStringFromGameId(gameId){
 function shouldAddGame(player, stats){
   if(player.waived || player.pickup){
     var waiveDate = "";
+    if(currentYear()){
+      waiveDate = "20190204";
+      if(player.team.match(/Maryland/)){
+        waiveDate = "20190131";
+      }
+      if(player.team.match(/Ohio/)){
+        waiveDate = "20190207";
+      }
+      if( (player.waived && dateOfGame <= waiveDate) || (player.pickup && dateOfGame > waiveDate)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
     if(historicYear() === "2018"){
       waiveDate = "20180129";
