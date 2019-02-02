@@ -149,6 +149,7 @@ function dateStringFromGameId(gameId){
 }
 
 function shouldAddGame(player, stats){
+  var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
@@ -183,7 +184,6 @@ function shouldAddGame(player, stats){
       }
     }
 
-    var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
     if( (player.waived && dateOfGame < waiveDate) ||
        (player.pickup && dateOfGame > waiveDate)) {
       return true;
