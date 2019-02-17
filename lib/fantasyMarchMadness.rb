@@ -12,7 +12,7 @@ require 'google/api_client'
 class App < Sinatra::Base
   use Rack::Session::Cookie
 
-  client = Google::APIClient.new
+  client = Google::APIClient.new(:user_agent => "google-api-ruby-client")
   client.authorization.client_id = ENV["CLIENT_ID"]
   client.authorization.client_secret = ENV["CLIENT_SECRET"]
   client.authorization.scope = 'email'

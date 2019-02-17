@@ -3,7 +3,7 @@ gem 'eventmachine'
 gem 'em-websocket'
 gem 'sinatra'
 gem 'thin'
-gem 'google-api-client'
+gem 'google-api-client', '0.8.6'
 gem 'nokogiri'
 
 group :test do
