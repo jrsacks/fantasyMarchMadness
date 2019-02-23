@@ -149,6 +149,10 @@ function dateStringFromGameId(gameId){
 }
 
 function shouldAddGame(player, stats){
+  var year = historicYear();
+  if(year === "2016" || year === "2015"){
+    return true;
+  }
   var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
   if(player.waived || player.pickup){
     var waiveDate = "";
