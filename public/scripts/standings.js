@@ -1,3 +1,4 @@
+var teams = [];
 function currentYear(){
   return window.location.pathname === '/' || historicYear() === '2019';
 }
@@ -54,6 +55,9 @@ function setupHideShowClickHandler(){
         $(this).text('Hide ' + text);
         $(selector).show();
       }
+      if(suffix === "undrafted"){
+        buildUndrafted();
+      }
     });
   }
   setup('players','Players','.teams .player-container');
@@ -78,7 +82,8 @@ function loadStandings(year){
   if(year){
     path += '/' + year;
   }
-  $.getJSON(path, [], function(teams){
+  $.getJSON(path, [], function(updatedTeams){
+    teams = updatedTeams;
     $('.teams').empty();
     _.each(sortByPoints(_.map(teams, buildTeam)), function(team){
       $('.teams').append(team.html);
@@ -105,24 +110,28 @@ function loadStandings(year){
       $('.today').show();
     }
     if(currentYear()){
-      $.getJSON('/data/players', (players) => {
-        var names = _.flatten(_.map(teams, (t) => _.map(t.players, 'name')));
-        var undrafted = _.filter(players, (p) => names.indexOf(p.name) === -1);
-
-        var players = $('#templates .players').clone();
-        var sortedPlayers = sortByPoints(_.map(undrafted, (player, idx) => buildPlayer(player, -1)));
-        _.each(sortedPlayers, function(player, i){
-          players.append(player.html);
-        });
-        $('.undrafted-container').empty().append(players);
-        if($('.hideshow-undrafted').text() == 'Show Undrafted'){
-          $('.undrafted-container .player-container').hide();
-        } else {
-          $('.undrafted-container .player-container').show();
-        }
-      });
+      buildUndrafted();
     }
   });
+}
+
+function buildUndrafted() {
+  if($('.hideshow-undrafted').text() == 'Show Undrafted'){
+      $('.undrafted-container .player-container').hide();
+  } else {
+    $('.undrafted-container .player-container').show();
+    $.getJSON('/data/players', (players) => {
+      var names = _.flatten(_.map(teams, (t) => _.map(t.players, 'name')));
+      var undrafted = _.filter(players, (p) => names.indexOf(p.name) === -1);
+
+      var players = $('#templates .players').clone();
+      var sortedPlayers = sortByPoints(_.map(undrafted, (player, idx) => buildPlayer(player, -1)));
+      _.each(sortedPlayers, function(player, i){
+        players.append(player.html);
+      });
+      $('.undrafted-container').empty().append(players);
+    });
+  }
 }
 
 function twoDigit(val){
@@ -174,30 +183,31 @@ function buildPlayer(player, index){
   var total = 0;
   var playerContainer = $('#templates .player-container').clone();
 
-  var gameNum = 0;
+  var today = new Date().format("{yyyy}/{MM}/{dd}");
+  var gameTemplate = $('#templates .player-game.details');
   _.each(player.stats, function(stats, gameId){
-    gameNum += 1;
-    var playerGame = $('#templates .player-game.details').clone();
-    var gameTotal = pointsForGame(stats);
-    if(stats.boxscore){
-      playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStringFromGameId(stats.boxscore)));
-    } else {
-      playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
-    }
-    if(playerGame.find('.game-link').text() == new Date().format("{yyyy}/{MM}/{dd}")){
-      playerGame.addClass('today');
-    }
-    playerGame.find('.base').text(basePointsForGame(stats));
-    playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
-    playerGame.find('.game-total').text(gameTotal.toFixed(1));
-    _.each(stats, function(value, stat){
-      playerGame.find('.' + stat).text(value);
-    });
-    if(stats.winner){
-      playerGame.addClass('winner');
-    }
-    
     if(shouldAddGame(player, stats)){
+      var playerGame = gameTemplate.clone();
+      var gameTotal = pointsForGame(stats);
+      if(stats.boxscore){
+        var dateStr = dateStringFromGameId(stats.boxscore);
+        playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
+        if(dateStr == today){
+          playerGame.addClass('today');
+        }
+      } else {
+        playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
+      }
+      playerGame.find('.base').text(basePointsForGame(stats));
+      playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
+      playerGame.find('.game-total').text(gameTotal.toFixed(1));
+      _.each(stats, function(value, stat){
+        playerGame.find('.' + stat).text(value);
+      });
+      if(stats.winner){
+        playerGame.addClass('winner');
+      }
+    
       playerContainer.find('.player-games').append(playerGame)
       total += gameTotal
       gameTotals.push(gameTotal);
