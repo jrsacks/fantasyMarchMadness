@@ -66,8 +66,9 @@ class Importer
   def players_on_team(abbrev)
     players = []
     begin
-      id_data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
-      team_id = id_data["teamdefault_league"].keys.first
+      #id_data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
+      #team_id = id_data["teamdefault_league"].keys.first
+      team_id = abbrev
       data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.team.roster;id=#{team_id}").read)
       teamname = data["team"]["full_name"]
       data["players"].each do |k, val|
