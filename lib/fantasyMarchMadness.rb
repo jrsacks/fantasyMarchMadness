@@ -5,21 +5,14 @@ require 'importer'
 require 'scoreboard'
 require 'json'
 require 'em-websocket'
-require 'google/api_client'
+require 'google/api_client/client_secrets'
+require 'google/apis/oauth2_v2'
 
 @@scoreboard = Scoreboard.new
 
 class App < Sinatra::Base
   use Rack::Session::Cookie
-
-  client = Google::APIClient.new(:user_agent => "google-api-ruby-client")
-  client.authorization.client_id = ENV["CLIENT_ID"]
-  client.authorization.client_secret = ENV["CLIENT_SECRET"]
-  client.authorization.scope = 'email'
-  oauth2_api = client.discovered_api('plus')
-
-  set :api_client, client
-  set :oauth2_api, oauth2_api
+  auth_client = Signet::OAuth2::Client.new(:client_id => ENV["CLIENT_ID"], :client_secret => ENV["CLIENT_SECRET"])
 
   set :bind, '0.0.0.0'
   set :port, 5678
@@ -28,21 +21,10 @@ class App < Sinatra::Base
 
   set :public_folder, File.dirname(__FILE__) + '/../public'
 
-  def api_client
-    settings.api_client
-  end
+  set :auth_client, auth_client
 
-  def oauth2_api
-    settings.oauth2_api
-  end
-
-  def user_credentials
-    @authorization ||= (
-      auth = api_client.authorization.dup
-      auth.redirect_uri = to('/oauth2callback')
-      auth.update_token!(session)
-      auth
-    )
+  def auth_client
+    settings.auth_client
   end
 
   ['/waiver', '/draft', '/'].each do |path|
@@ -56,27 +38,33 @@ class App < Sinatra::Base
   end
 
   get '/login' do
-    unless session[:user]
-      result = api_client.execute(:api_method => oauth2_api.people.get,
-                                  :parameters => {'userId' => 'me'},
-                                  :authorization => user_credentials)
-      puts session[:user] = result.data.to_hash
-    end
-    redirect to('/')
+    redirect to('/oauth2callback')
   end
 
   get '/oauth2authorize' do
-    redirect user_credentials.authorization_uri.to_s, 303
+    redirect '/oauth2callback'
   end
 
   get '/oauth2callback' do
-    user_credentials.code = params[:code] if params[:code]
-    user_credentials.fetch_access_token!
-    session[:access_token] = user_credentials.access_token
-    session[:refresh_token] = user_credentials.refresh_token
-    session[:expires_in] = user_credentials.expires_in
-    session[:issued_at] = user_credentials.issued_at
-    redirect to('/login')
+    client_secrets = Google::APIClient::ClientSecrets.load("client.json")
+    auth_client = client_secrets.to_authorization
+    auth_client.update!(
+      :scope => 'https://www.googleapis.com/auth/userinfo.email',
+      :redirect_uri => url('/oauth2callback'))
+    if request['code'] == nil
+      auth_uri = auth_client.authorization_uri.to_s
+      redirect to(auth_uri)
+    else
+      auth_client.code = request['code']
+      auth_client.fetch_access_token!
+      auth_client.client_secret = nil
+      session[:credentials] = auth_client.to_json
+      service = Google::Apis::Oauth2V2::Oauth2Service.new
+      service.authorization = auth_client
+      userinfo = service.get_userinfo
+      session[:user] = {:email => userinfo.email}
+      redirect to('/')
+    end
   end
 
   get '/' do

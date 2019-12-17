@@ -4,3 +4,4 @@ vendor
 .bundle
 wishlist-*.json
 run
+client.json

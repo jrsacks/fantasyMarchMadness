@@ -9,7 +9,7 @@ function currentYear() { return true;}
 function historicYear() { return "";}
 
 function setTeam() {
-  var email = userData.emails[0].value;
+  var email = userData.email;
   var teamMatch = _.find(teamData, function(teamObj){
     return teamObj.email === email;
   });
@@ -19,7 +19,7 @@ function setTeam() {
 }
 
 function userFromTeamData() {
-  return userData.displayName;
+  return userData.email;
 }
 
 function idFromName(name) {
