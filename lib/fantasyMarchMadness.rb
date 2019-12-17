@@ -168,7 +168,7 @@ class App < Sinatra::Base
   end
 
   post '/wishlist' do
-    name = session[:user]["displayName"]
+    name = session[:user]["email"].split("@")[0]
     list = request.body.read.to_s
     File.open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")), 'w') do |f|
       f.puts list.to_s
@@ -177,7 +177,7 @@ class App < Sinatra::Base
   end
 
   get '/wishlist' do
-    name = session[:user]["displayName"]
+    name = session[:user]["email"].split("@")[0]
     File.read(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")))
   end
 
