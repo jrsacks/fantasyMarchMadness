@@ -27,6 +27,11 @@ class App < Sinatra::Base
     settings.auth_client
   end
 
+  def wishlist_file(current_session)
+    name = current_session[:user][:email].split("@")[0]
+    File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json"))
+  end
+
   ['/waiver', '/draft', '/'].each do |path|
     post path do
       if session[:user]
@@ -167,17 +172,20 @@ class App < Sinatra::Base
   end
 
   post '/wishlist' do
-    name = session[:user][:email].split("@")[0]
     list = request.body.read.to_s
-    File.open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")), 'w') do |f|
+    File.open(wishlist_file(session), 'w') do |f|
       f.puts list.to_s
     end
     list
   end
 
   get '/wishlist' do
-    name = session[:user][:email].split("@")[0]
-    File.read(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")))
+    file = wishlist_file(session)
+    if File.exists? file
+      File.read(file)
+    else
+      [].to_json
+    end
   end
 
   def self.start
