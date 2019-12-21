@@ -6,7 +6,7 @@ function teamTotal(players){
   var year = historicYear();
   if(year === '2018'){
     return sortedGameScores(players).slice(0,128).sum().toFixed(1);
-  } else if(currentYear() || year === '2016' || year === '2017'){
+  } else if(currentYear() || year === '2016' || year === '2017' || year === '2019'){
     return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   } else if(year === '2015'){
     return _.pluck(players.slice(0,8), 'points').sum();
@@ -120,8 +120,16 @@ function multiplierFor2019(stats){
   return multiplier;
 }
 
+function multiplierFor2020(stats){
+  var multiplier = 1;
+
+  return multiplier;
+}
+
 function multiplierForGame(stats){
   if(currentYear()){
+    return multiplierFor2020(stats);
+  } else if(historicYear() === '2019'){
     return multiplierFor2019(stats);
   } else if(historicYear() === '2018'){
     return multiplierFor2018(stats);
@@ -157,6 +165,13 @@ function shouldAddGame(player, stats){
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
+      waiveDate = "20200203";
+      if(player.team.match(/Maryland/) || player.team.match(/Michigan/) || player.team.match(/Ohio State/) || player.team.match(/Penn State/)){
+        waiveDate = "20200205";
+      }
+    }
+
+    if(historicYear() === "2019"){
       waiveDate = "20190204";
       if(player.team.match(/Maryland/)){
         waiveDate = "20190131";
