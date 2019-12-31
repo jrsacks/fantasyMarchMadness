@@ -123,6 +123,57 @@ function multiplierFor2019(stats){
 function multiplierFor2020(stats){
   var multiplier = 1;
 
+  if(stats.winner){
+    multiplier *= 1.4
+  }
+  if(stats.fouls === 5){
+    multiplier *= 0.7;
+  }
+
+  var overEight = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 8).length;
+  var overTen = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 10).length;
+
+  if(overEight > 2) {
+    multiplier *= 2;
+  } else if (overTen === 2){
+    multiplier *= 1.5
+  } else if (overEight == 2){
+    multiplier *= 1.2
+  }
+
+  if(stats.fts_attempted >= 4){
+    var percent = (stats.fts / stats.fts_attempted);
+    if(percent < 0.3){
+      multiplier = 0;
+    } else if (percent < 0.5 ) {
+      multiplier *= 0.7;
+    } else if (percent > 0.9 ) {
+      multiplier *= 1.5;
+    } else if (percent > 0.8 ) {
+      multiplier *= 1.2;
+    }
+  }
+
+  if(stats.turnovers >= 6){
+    multiplier = 0;
+  } else if (stats.turnovers == 5){
+    multiplier *= 0.4;
+  } else if (stats.turnovers == 4){
+    multiplier *= 0.7;
+  }
+
+  if(stats.threes_attempted >= 3){
+    var percent = (stats.threes / stats.threes_attempted);
+    if(percent < 0.15){
+      multiplier *= 0.5;
+    } else if (percent < 0.25 ) {
+      multiplier *= 0.75;
+    } else if (percent > 0.75 ) {
+      multiplier *= 1.5;
+    } else if (percent > 0.5 ) {
+      multiplier *= 1.25;
+    }
+  }
   return multiplier;
 }
 
