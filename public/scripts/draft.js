@@ -279,7 +279,7 @@ $(document).ready(function(){
                 var playerGames = _.filter(player.stats, s => shouldAddGame(player, s));
                 return {games: _.map(playerGames, pointsForGame)};
               });
-              teamData[i].score = teamTotal(players);
+              teamData[i].score = parseFloat(teamTotal(players));
             });
             setTeam();
             addRowsToTeamTable();
