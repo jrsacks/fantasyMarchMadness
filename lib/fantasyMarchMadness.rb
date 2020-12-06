@@ -138,6 +138,7 @@ class App < Sinatra::Base
   end
 
   #load players on team
+  # example michigan - 357
   get '/players/:id' do |id|
     players = settings.importer.players_on_team(id)
     settings.scoreboard.add_players players

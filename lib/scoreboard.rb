@@ -1,4 +1,5 @@
 require 'json'
+require 'set'
 
 class Scoreboard
   attr_reader :teams, :players
@@ -104,11 +105,23 @@ class Scoreboard
   def update_game(game_id, box_score)
     winner = ''
     winner = find_winner(box_score[:players]) if box_score[:final]
+    teams =  Set.new
+    teams << winner
+    boxscore = ""
     box_score[:players].each do |player|
       if @players[player[:id]]
         @players[player[:id]]["current"] = true
         player[:winner] = true if @players[player[:id]]["team"] == winner
+        teams << @players[player[:id]]["team"]
         @players[player[:id]]["stats"].merge!({game_id => player})
+        boxscore = player[:boxscore]
+      end
+    end
+    @players.each do |id, player|
+      if teams.include?(player["team"])
+        unless player["stats"].has_key?(game_id)
+          player["stats"][game_id] = {:boxscore => boxscore}
+        end
       end
     end
     if box_score[:final]

@@ -2,11 +2,23 @@ function sortedGameScores(players){
   return _.sortBy(_.flatten(_.pluck(players, 'games')), function(g){ return -g;});
 }
 
+function best16perPlayer(players){
+  return _.flatten(_.map(players, player => {
+      var gamesToCount = 16;
+      if(player.waived || player.pickup){
+          gamesToCount = 8;
+      }
+      return _.sortBy(player.games, g => -g).slice(0, gamesToCount);
+  }));
+}
+
 function teamTotal(players){
   var year = historicYear();
-  if(year === '2018'){
+  if(currentYear()){
+    return best16perPlayer(players).sum().toFixed(1);
+  } else if(year === '2018'){
     return sortedGameScores(players).slice(0,128).sum().toFixed(1);
-  } else if(currentYear() || year === '2016' || year === '2017' || year === '2019' || year === '2020'){
+  } else if(year === '2016' || year === '2017' || year === '2019' || year === '2020'){
     return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   } else if(year === '2015'){
     return _.pluck(players.slice(0,8), 'points').sum();
@@ -121,8 +133,60 @@ function multiplierFor2019(stats){
 }
 
 function multiplierFor2021(stats){
-    var multiplier = 1;
-    return multiplier;
+  var multiplier = 1;
+
+  if(stats.winner){
+    multiplier *= 1.4
+  }
+  if(stats.fouls === 5){
+    multiplier *= 0.7;
+  }
+
+  var overEight = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 8).length;
+  var overTen = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 10).length;
+
+  if(overEight > 2) {
+    multiplier *= 2;
+  } else if (overTen === 2){
+    multiplier *= 1.5
+  } else if (overEight == 2){
+    multiplier *= 1.2
+  }
+
+  if(stats.fts_attempted >= 4){
+    var percent = (stats.fts / stats.fts_attempted);
+    if(percent < 0.3){
+      multiplier = 0;
+    } else if (percent < 0.5 ) {
+      multiplier *= 0.7;
+    } else if (percent > 0.9 ) {
+      multiplier *= 1.5;
+    } else if (percent > 0.8 ) {
+      multiplier *= 1.2;
+    }
+  }
+
+  if(stats.turnovers >= 6){
+    multiplier = 0;
+  } else if (stats.turnovers == 5){
+    multiplier *= 0.4;
+  } else if (stats.turnovers == 4){
+    multiplier *= 0.7;
+  }
+
+  if(stats.threes_attempted >= 3){
+    var percent = (stats.threes / stats.threes_attempted);
+    if(percent < 0.15){
+      multiplier *= 0.5;
+    } else if (percent < 0.25 ) {
+      multiplier *= 0.75;
+    } else if (percent > 0.75 ) {
+      multiplier *= 1.5;
+    } else if (percent > 0.5 ) {
+      multiplier *= 1.25;
+    }
+  }
+  return multiplier;
 }
 
 function multiplierFor2020(stats){
@@ -214,7 +278,7 @@ function dateStringFromGameId(gameId){
   return dateOfGame.slice(0,4) + "/" + dateOfGame.slice(4,6) + "/" + dateOfGame.slice(6,8);
 }
 
-function shouldAddGame(player, stats){
+function shouldAddGame(player, stats, gameIndex){
   var year = historicYear();
   if(year === "2016" || year === "2015"){
     return true;
@@ -223,6 +287,7 @@ function shouldAddGame(player, stats){
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
+      return (player.waived && gameIndex <= 10) || (player.pickup && gameIndex > 10);
     }
     if(historicYear() === "2020"){
       waiveDate = "20200203";

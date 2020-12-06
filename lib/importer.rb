@@ -60,18 +60,16 @@ class Importer
     teams
   end
 
-  def players_on_team(abbrev)
+  def players_on_team(team_id)
     players = []
     begin
-      id_data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.alias;expected_entity=team;id=%2Fncaab%2Fteams%2F#{abbrev}%2F").read)
-      team_id = id_data["teamdefault_league"].keys.first
-      data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.team.roster;id=#{team_id}").read)
+      data = JSON.parse(open("https://sports.yahoo.com/site/api/resource/sports.team.roster;id=ncaab.t.#{team_id}").read)
       teamname = data["team"]["full_name"]
       data["players"].each do |k, val|
         players << {:id => k, :name => val["display_name"], :team => teamname}
       end
     rescue => e
-      puts "Caught exception finding all the players for #{abbrev}: #{e}"
+      puts "Caught exception finding all the players for #{team_id}: #{e}"
     end
     players
   end

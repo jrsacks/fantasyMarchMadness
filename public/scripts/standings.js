@@ -185,10 +185,12 @@ function buildPlayer(player, index){
 
   var today = new Date().format("{yyyy}/{MM}/{dd}");
   var gameTemplate = $('#templates .player-game.details');
+  var gameIndex = 0;
   _.each(player.stats, function(stats, gameId){
-    if(shouldAddGame(player, stats)){
+    if(shouldAddGame(player, stats, gameIndex)){
+      gameIndex++;
       var playerGame = gameTemplate.clone();
-      var gameTotal = pointsForGame(stats);
+      var gameTotal = pointsForGame(stats) || 0;
       if(stats.boxscore){
         var dateStr = dateStringFromGameId(stats.boxscore);
         playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
