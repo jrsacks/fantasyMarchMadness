@@ -181,9 +181,9 @@ function multiplierFor2021(stats){
     } else if (percent < 0.25 ) {
       multiplier *= 0.75;
     } else if (percent > 0.75 ) {
-      multiplier *= 1.5;
+      multiplier *= 2;
     } else if (percent > 0.5 ) {
-      multiplier *= 1.25;
+      multiplier *= 1.5;
     }
   }
   return multiplier;
