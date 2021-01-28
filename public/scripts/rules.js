@@ -266,7 +266,7 @@ function basePointsForGame(stats){
   return (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
 }
 function pointsForGame(stats){
-  return basePointsForGame(stats) * multiplierForGame(stats);
+  return (basePointsForGame(stats) * multiplierForGame(stats)) || 0;
 }
 
 function dateFromGameId(gameId){

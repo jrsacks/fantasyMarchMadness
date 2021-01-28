@@ -277,7 +277,7 @@ $(document).ready(function(){
             _.each(standings, function(t, i){ 
               var players = _.map(t.players, function(player){
                 var playerGames = _.filter(player.stats, s => shouldAddGame(player, s));
-                return {games: _.map(playerGames, pointsForGame)};
+                return {games: _.map(playerGames, pointsForGame), player: player};
               });
               teamData[i].score = parseFloat(teamTotal(players));
             });
