@@ -188,7 +188,6 @@ function buildPlayer(player, index){
   var gameIndex = 0;
   _.each(player.stats, function(stats, gameId){
     if(shouldAddGame(player, stats, gameIndex)){
-      gameIndex++;
       var playerGame = gameTemplate.clone();
       var gameTotal = pointsForGame(stats) || 0;
       if(stats.boxscore){
@@ -214,6 +213,7 @@ function buildPlayer(player, index){
       total += gameTotal
       gameTotals.push(gameTotal);
     }
+    gameIndex++;
   });
 
   var round = index + 1;
@@ -234,5 +234,5 @@ function buildPlayer(player, index){
     playerContainer.addClass('current');
   }
 
-  return {html : playerContainer, points : total, current: player.current, games : gameTotals};
+  return {html : playerContainer, points : total, current: player.current, games : gameTotals, player: player};
 }

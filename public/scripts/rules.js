@@ -5,7 +5,7 @@ function sortedGameScores(players){
 function best16perPlayer(players){
   return _.flatten(_.map(players, player => {
       var gamesToCount = 16;
-      if(player.waived || player.pickup){
+      if(player.player.waived || player.player.pickup){
           gamesToCount = 8;
       }
       return _.sortBy(player.games, g => -g).slice(0, gamesToCount);
@@ -287,7 +287,7 @@ function shouldAddGame(player, stats, gameIndex){
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
-      return (player.waived && gameIndex <= 10) || (player.pickup && gameIndex > 10);
+      return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
     }
     if(historicYear() === "2020"){
       waiveDate = "20200203";
