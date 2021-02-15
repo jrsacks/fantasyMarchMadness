@@ -155,7 +155,12 @@ class App < Sinatra::Base
   end
 
   get '/data/chat' do
-    File.read(File.join('data', 'chat.json'))
+    chat_file = File.join('data', 'chat.json')
+    if File.exists?(chat_file)
+      File.read(chat_file)
+    else
+      ""
+    end
   end
 
   post '/team' do 
@@ -178,7 +183,12 @@ class App < Sinatra::Base
 
   get '/wishlist' do
     name = session[:user][:email].split("@")[0]
-    File.read(File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json")))
+    wishlist_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json"))
+    if File.exists? wishlist_file
+      File.read(wishlist_file)
+    else
+      "[]"
+    end
   end
 
   def self.start
