@@ -223,7 +223,16 @@ function buildPlayer(player, index){
   playerContainer.find('.player-round').text(round);
   var numberOfGames = playerContainer.find('.details').length;
   var average = (total / (numberOfGames || 1)).toFixed(1);
-  playerContainer.find('.player-total').text(total.toFixed(1) + " (" + average + ")");
+  if(currentYear()){
+      var gamesToCount = 16;
+      if(player.waived || player.pickup){
+          gamesToCount = 8;
+      }
+      var countable = _.sortBy(gameTotals, g => -g).slice(0, gamesToCount).sum();
+      playerContainer.find('.player-total').text(total.toFixed(1) + " (" + countable.toFixed(1) + ")");
+  } else {
+      playerContainer.find('.player-total').text(total.toFixed(1) + " (" + average + ")");
+  }
   var nameText = player.name + " (" + numberOfGames + ")";
   playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){
     $(this).text(player.team);
