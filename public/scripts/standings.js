@@ -181,37 +181,42 @@ function dateStringFromGameId(gameId){
 function buildPlayer(player, index){
   var gameTotals = [];
   var total = 0;
+  var allGameTotal = 0;
   var playerContainer = $('#templates .player-container').clone();
 
   var today = new Date().format("{yyyy}/{MM}/{dd}");
   var gameTemplate = $('#templates .player-game.details');
   var gameIndex = 0;
   _.each(player.stats, function(stats, gameId){
-    if(shouldAddGame(player, stats, gameIndex)){
-      var playerGame = gameTemplate.clone();
-      var gameTotal = pointsForGame(stats);
-      if(stats.boxscore){
-        var dateStr = dateStringFromGameId(stats.boxscore);
-        playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
-        if(dateStr == today){
-          playerGame.addClass('today');
-        }
-      } else {
-        playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
+    var countable = shouldAddGame(player, stats, gameIndex);
+    var playerGame = gameTemplate.clone();
+    var gameTotal = pointsForGame(stats);
+    if(stats.boxscore){
+      var dateStr = dateStringFromGameId(stats.boxscore);
+      playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
+      if(dateStr == today){
+        playerGame.addClass('today');
       }
-      playerGame.find('.base').text(basePointsForGame(stats));
-      playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
-      playerGame.find('.game-total').text(gameTotal.toFixed(1));
-      _.each(stats, function(value, stat){
-        playerGame.find('.' + stat).text(value);
-      });
-      if(stats.winner){
-        playerGame.addClass('winner');
-      }
-    
-      playerContainer.find('.player-games').append(playerGame)
+    } else {
+      playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
+    }
+    playerGame.find('.base').text(basePointsForGame(stats));
+    playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
+    playerGame.find('.game-total').text(gameTotal.toFixed(1));
+    _.each(stats, function(value, stat){
+      playerGame.find('.' + stat).text(value);
+    });
+    if(stats.winner){
+      playerGame.addClass('winner');
+    }
+  
+    playerContainer.find('.player-games').append(playerGame)
+    allGameTotal += gameTotal;
+    if (countable) {
       total += gameTotal
       gameTotals.push(gameTotal);
+    } else {
+      playerGame.addClass('non-countable');
     }
     gameIndex++;
   });
@@ -221,7 +226,7 @@ function buildPlayer(player, index){
     round += 'w';
   }
   playerContainer.find('.player-round').text(round);
-  var numberOfGames = playerContainer.find('.details').length;
+  var numberOfGames = gameTotals.length;
   var average = (total / (numberOfGames || 1)).toFixed(1);
   if(currentYear()){
       var gamesToCount = 16;
@@ -229,7 +234,7 @@ function buildPlayer(player, index){
           gamesToCount = 8;
       }
       var countable = _.sortBy(gameTotals, g => -g).slice(0, gamesToCount).sum();
-      playerContainer.find('.player-total').text(total.toFixed(1) + " (" + countable.toFixed(1) + ")");
+      playerContainer.find('.player-total').text(countable.toFixed(1) + " (" + allGameTotal.toFixed(1) + ")");
   } else {
       playerContainer.find('.player-total').text(total.toFixed(1) + " (" + average + ")");
   }

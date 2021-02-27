@@ -48,3 +48,7 @@ body {
 .winner {
   color: #0060B7;
 }
+
+.non-countable {
+  opacity: 30%;
+}

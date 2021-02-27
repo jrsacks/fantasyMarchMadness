@@ -29,14 +29,10 @@ function projectedTeamInfo(total, players){
   var year = historicYear();
   var games = sortedGameScores(players);
   if(currentYear() && games.length > 0){
-    var n = 144;
-    if(games.length < n) {
-      var avg = (total / games.length).toFixed(1);
-      return ' (' + games.length + ' - ' + avg + ')';
-    } else {
-      var avg = (total / n).toFixed(1);
-      return ' (' + avg + ' - ' + games.slice(0,n).min().toFixed(1) + ')';
-    }
+    var gameScores = best16perPlayer(players);
+    var n = gameScores.length;
+    var avg = (total / n).toFixed(1);
+    return ' (' + avg + ')';
   } else {
     var n = 144;
     if(year === '2018'){
