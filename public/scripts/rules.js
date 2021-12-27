@@ -15,6 +15,8 @@ function best16perPlayer(players){
 function teamTotal(players){
   var year = historicYear();
   if(currentYear()){
+    return sortedGameScores(players).slice(0,144).sum().toFixed(1);
+  } else if(year === '2021'){
     return best16perPlayer(players).sum().toFixed(1);
   } else if(year === '2018'){
     return sortedGameScores(players).slice(0,128).sum().toFixed(1);
@@ -244,6 +246,8 @@ function multiplierFor2020(stats){
 
 function multiplierForGame(stats){
   if(currentYear()){
+      return 1;
+  } else if(historicYear() === '2021'){
     return multiplierFor2021(stats);
   } else if(historicYear() === '2020'){
     return multiplierFor2020(stats);
@@ -283,6 +287,9 @@ function shouldAddGame(player, stats, gameIndex){
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
+      return  true;
+    }
+    if(historicYear() === "2021"){
       return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
     }
     if(historicYear() === "2020"){
