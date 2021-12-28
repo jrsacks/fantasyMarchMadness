@@ -35,15 +35,15 @@ class App < Sinatra::Base
   ['/waiver', '/draft', '/'].each do |path|
     post path do
       if session[:user]
-        redirect to(path) 
+        redirect to(path, true) 
       else
-        redirect to('/oauth2authorize')
+        redirect to('/oauth2authorize', true)
       end
     end
   end
 
   get '/login' do
-    redirect to('/oauth2callback')
+    redirect to('/oauth2callback', true)
   end
 
   get '/oauth2authorize' do
@@ -55,10 +55,10 @@ class App < Sinatra::Base
     auth_client = client_secrets.to_authorization
     auth_client.update!(
       :scope => 'https://www.googleapis.com/auth/userinfo.email',
-      :redirect_uri => url('/oauth2callback'))
+      :redirect_uri => url('/oauth2callback', true))
     if request['code'] == nil
       auth_uri = auth_client.authorization_uri.to_s
-      redirect to(auth_uri)
+      redirect to(auth_uri, true)
     else
       auth_client.code = request['code']
       auth_client.fetch_access_token!
@@ -68,7 +68,7 @@ class App < Sinatra::Base
       service.authorization = auth_client
       userinfo = service.get_userinfo
       session[:user] = {:email => userinfo.email}
-      redirect to('/')
+      redirect to('/', true)
     end
   end
 
