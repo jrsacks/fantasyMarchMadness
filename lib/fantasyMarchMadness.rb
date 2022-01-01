@@ -32,7 +32,7 @@ class App < Sinatra::Base
     File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', "wishlist-#{name}.json"))
   end
 
-  ['/waiver', '/draft', '/'].each do |path|
+  ['/captain', '/waiver', '/draft', '/'].each do |path|
     post path do
       if session[:user]
         redirect to(path, true) 
@@ -83,7 +83,7 @@ class App < Sinatra::Base
   end
 
   #serve draft page
-  ['draft', 'waiver'].each do |page|
+  ['captain', 'draft', 'waiver'].each do |page|
     get "/#{page}" do
       File.read(File.join('public', "#{page}.html"))
     end
@@ -170,6 +170,15 @@ class App < Sinatra::Base
     else
       "Invalid Team"
     end
+  end
+
+  post '/updateCaptain' do
+    data = JSON.parse(request.body.read.to_s)
+    STDERR.puts data
+    if data["team"]
+      settings.scoreboard.captain data["player"], data["captain"]
+    end
+    ""
   end
 
   post '/wishlist' do

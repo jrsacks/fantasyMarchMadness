@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script language="javascript" type="text/javascript" src="/scripts/jquery-1.9.1.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/reconnecting-websocket.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/underscore.js" ></script>
+    <script language="javascript" type="text/javascript" src="/js/sugar.1.4.1.min.js" ></script>
+    <script language="javascript" type="text/javascript" src="/scripts/captain.js" ></script>
+    <title>Team Captain</title>
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <span class="brand">Team Captain</span>
+      <span class="log-in pull-right">
+        <form action="/captain" method="post">
+          <button class="btn btn-primary" type="submit">Sign In</button>
+        </form>
+      </span>
+    </div>
+  </div>
+  <div class='container-fluid'>
+    <ul class="players">
+    </ul>
+  </div>
+  
+  <div class='template player'>
+    <div class='name'></div>
+    <input type='date'></input>
+    <button class='btn'>Save</button>
+  </div>
+  </body>
+</html>

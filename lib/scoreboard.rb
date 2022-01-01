@@ -23,6 +23,11 @@ class Scoreboard
       {"team" => team["team"], "players" => players, "name" => team["name"] || team["team"]}
     end
   end
+  
+  def captain(player_id, date)
+    @players[player_id]['captain'] = date
+    File.open(@player_file, 'w') { |f| f.puts @players.to_json  }
+  end
 
   def new_team(team_data)
     if team_data["id"]
