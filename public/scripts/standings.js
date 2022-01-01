@@ -190,7 +190,7 @@ function buildPlayer(player, index){
   _.each(player.stats, function(stats, gameId){
     var countable = shouldAddGame(player, stats, gameIndex);
     var playerGame = gameTemplate.clone();
-    var gameTotal = pointsForGame(stats);
+    var gameTotal = pointsForGame(stats, player.captain);
     if(stats.boxscore){
       var dateStr = dateStringFromGameId(stats.boxscore);
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
@@ -201,7 +201,7 @@ function buildPlayer(player, index){
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     }
     playerGame.find('.base').text(basePointsForGame(stats));
-    playerGame.find('.multiplier').text(multiplierForGame(stats).toFixed(2));
+    playerGame.find('.multiplier').text(multiplierForGame(stats, player.captain).toFixed(2));
     playerGame.find('.game-total').text(gameTotal.toFixed(1));
     _.each(stats, function(value, stat){
       playerGame.find('.' + stat).text(value);
