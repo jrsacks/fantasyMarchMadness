@@ -351,10 +351,22 @@ function shouldAddGame(player, stats, gameIndex){
     return true;
   }
   var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
+  if(currentYear()){
+      if(player.team.match(/Maryland/) || player.team.match(/Northwestern/)){
+          if(gameIndex == 0){
+              return false;
+          }
+      }
+  }
+
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
-      return  true;
+        if(player.team.match(/Maryland/) || player.team.match(/Northwestern/)){
+            return (player.waived && gameIndex <= 10) || (player.pickup && gameIndex > 10);
+        } else {
+            return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
+        }
     }
     if(historicYear() === "2021"){
       return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
