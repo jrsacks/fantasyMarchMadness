@@ -31,6 +31,7 @@ body {
 
 .captain {
     background: red !important;
+    color: black;
 }
 
 .player-round {
