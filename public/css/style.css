@@ -29,6 +29,10 @@ body {
   background: rgb(255, 216, 94);
 } 
 
+.captain {
+    background: red !important;
+}
+
 .player-round {
   font-size: small;
 }

@@ -197,11 +197,17 @@ function buildPlayer(player, index){
       if(dateStr == today){
         playerGame.addClass('today');
       }
+      var dateOfGame = stats.boxscore.split('-').last().slice(0,8);
+      var gameDate  = dateOfGame.slice(0,4) + "-" + dateOfGame.slice(4,6) + "-" + dateOfGame.slice(6,8);
+      if(player.captain && player.captain == gameDate){
+          playerGame.find('.multiplier').addClass('captain');
+      }
     } else {
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     }
     playerGame.find('.base').text(basePointsForGame(stats));
     playerGame.find('.multiplier').text(multiplierForGame(stats, player.captain).toFixed(2));
+
     playerGame.find('.game-total').text(gameTotal.toFixed(1));
     _.each(stats, function(value, stat){
       playerGame.find('.' + stat).text(value);

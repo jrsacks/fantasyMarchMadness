@@ -139,7 +139,6 @@ function multiplierFor2022(stats, captain){
   var gameDate  = dateOfGame.slice(0,4) + "-" + dateOfGame.slice(4,6) + "-" + dateOfGame.slice(6,8);
   var multiplier = 1;
   if(captain && captain == gameDate){
-      console.log(gameDate);
       multiplier *= 2;
   }
 
