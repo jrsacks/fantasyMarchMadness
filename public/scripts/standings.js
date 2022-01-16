@@ -184,7 +184,9 @@ function buildPlayer(player, index){
   var allGameTotal = 0;
   var playerContainer = $('#templates .player-container').clone();
 
+  var now = new Date();
   var today = new Date().format("{yyyy}/{MM}/{dd}");
+  var yesterday = new Date(now.getTime() - 24*60*60*1000);
   var gameTemplate = $('#templates .player-game.details');
   var gameIndex = 0;
   _.each(player.stats, function(stats, gameId){
@@ -194,7 +196,7 @@ function buildPlayer(player, index){
     if(stats.boxscore){
       var dateStr = dateStringFromGameId(stats.boxscore);
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
-      if(dateStr == today){
+      if(dateStr == today || (now.getHours() < 11 && dateStr == yesterday)){
         playerGame.addClass('today');
       }
       var dateOfGame = stats.boxscore.split('-').last().slice(0,8);
