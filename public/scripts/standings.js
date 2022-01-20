@@ -236,7 +236,7 @@ function buildPlayer(player, index){
   playerContainer.find('.player-round').text(round);
   var numberOfGames = gameTotals.length;
   var countable = _.sortBy(gameTotals, g => -g).sum();
-  var average = (countable / (gameTotals.length || 1)).toFixed(1);
+  var average = (countable / (gameTotals.length || 1));
   playerContainer.find('.player-total').text(countable.toFixed(1) + " (" + average.toFixed(1) + ")");
   var nameText = player.name + " (" + numberOfGames + ")";
   playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){
