@@ -186,7 +186,7 @@ function buildPlayer(player, index){
 
   var now = new Date();
   var today = new Date().format("{yyyy}/{MM}/{dd}");
-  var yesterday = new Date(now.getTime() - 24*60*60*1000);
+  var yesterday = new Date(now.getTime() - 24*60*60*1000).format("{yyyy}/{MM}/{dd}");
   var gameTemplate = $('#templates .player-game.details');
   var gameIndex = 0;
   _.each(player.stats, function(stats, gameId){
@@ -235,17 +235,9 @@ function buildPlayer(player, index){
   }
   playerContainer.find('.player-round').text(round);
   var numberOfGames = gameTotals.length;
-  var average = (total / (numberOfGames || 1)).toFixed(1);
-  if(currentYear()){
-      var gamesToCount = 16;
-      if(player.waived || player.pickup){
-          gamesToCount = 8;
-      }
-      var countable = _.sortBy(gameTotals, g => -g).slice(0, gamesToCount).sum();
-      playerContainer.find('.player-total').text(countable.toFixed(1) + " (" + allGameTotal.toFixed(1) + ")");
-  } else {
-      playerContainer.find('.player-total').text(total.toFixed(1) + " (" + average + ")");
-  }
+  var countable = _.sortBy(gameTotals, g => -g).slice(0, gamesToCount).sum();
+  var average = (countable / (gameTotals.length || 1)).toFixed(1);
+  playerContainer.find('.player-total').text(countable.toFixed(1) + " (" + average.toFixed(1) + ")");
   var nameText = player.name + " (" + numberOfGames + ")";
   playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){
     $(this).text(player.team);
