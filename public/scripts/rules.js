@@ -362,9 +362,9 @@ function shouldAddGame(player, stats, gameIndex){
     var waiveDate = "";
     if(currentYear()){
         if(player.team.match(/Maryland/) || player.team.match(/Northwestern/)){
-            return (player.waived && gameIndex <= 10) || (player.pickup && gameIndex > 10);
-        } else {
             return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
+        } else {
+            return (player.waived && gameIndex <= 8) || (player.pickup && gameIndex > 8);
         }
     }
     if(historicYear() === "2021"){
