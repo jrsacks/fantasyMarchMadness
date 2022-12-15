@@ -27,7 +27,7 @@ function showTeam(){
         var playerInfo = playerData[playerId];
         var player = $('.player.template').clone().removeClass('template');
         player.find('.name').text(playerText(playerInfo));
-        player.find('input').val(playerInfo.captain || "2022-03-07");
+        player.find('input').val(playerInfo.captain || "2023-03-06");
         player.find('input').change(() => {
             player.find("button").removeClass("btn-success");
         });
