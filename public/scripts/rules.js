@@ -134,12 +134,15 @@ function multiplierFor2019(stats){
   return multiplier;
 }
 
-function multiplierFor2023(stats, captain){
+function multiplierFor2023(stats, captain, superCaptain){
   var dateOfGame = stats.boxscore.split('-').last().slice(0,8);
   var gameDate  = dateOfGame.slice(0,4) + "-" + dateOfGame.slice(4,6) + "-" + dateOfGame.slice(6,8);
   var multiplier = 1;
   if(captain && captain == gameDate){
       multiplier *= 2;
+  }
+  if(superCaptain && superCaptain == gameDate){
+      multiplier *= 3;
   }
 
   if(stats.winner){
@@ -372,9 +375,9 @@ function multiplierFor2020(stats){
   return multiplier;
 }
 
-function multiplierForGame(stats, captain){
+function multiplierForGame(stats, captain, superCaptain){
   if(currentYear()){
-    return multiplierFor2023(stats, captain);
+    return multiplierFor2023(stats, captain, superCaptain);
   } else if(historicYear() === '2022'){
     return multiplierFor2022(stats, captain);
   } else if(historicYear() === '2021'){
@@ -395,8 +398,8 @@ function multiplierForGame(stats, captain){
 function basePointsForGame(stats){
   return (stats.points + stats.rebounds + stats.steals + stats.assists + stats.blocks + stats.threes);
 }
-function pointsForGame(stats, captain){
-  return (basePointsForGame(stats) * multiplierForGame(stats, captain)) || 0;
+function pointsForGame(stats, captain, superCaptain){
+  return (basePointsForGame(stats) * multiplierForGame(stats, captain, superCaptain)) || 0;
 }
 
 function dateFromGameId(gameId){
@@ -414,6 +417,14 @@ function shouldAddGame(player, stats, gameIndex){
     return true;
   }
   var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
+  if(currentYear()){
+      if(player.team.match(/Ohio State/) || player.team.match(/Michigan/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
+          if(gameIndex == 0){
+              return false;
+          }
+      }
+  }
+
   if(year == "2022"){
       if(player.team.match(/Maryland/) || player.team.match(/Northwestern/)){
           if(gameIndex == 0){
@@ -424,6 +435,13 @@ function shouldAddGame(player, stats, gameIndex){
 
   if(player.waived || player.pickup){
     var waiveDate = "";
+    if(currentYear()){
+        if(player.team.match(/Ohio State/) || player.team.match(/Michigan/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
+            return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
+        } else {
+            return (player.waived && gameIndex <= 8) || (player.pickup && gameIndex > 8);
+        }
+    }
     if(historicYear() === "2022"){
         if(player.team.match(/Maryland/) || player.team.match(/Northwestern/)){
             return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);

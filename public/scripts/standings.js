@@ -192,7 +192,7 @@ function buildPlayer(player, index){
   _.each(player.stats, function(stats, gameId){
     var countable = shouldAddGame(player, stats, gameIndex);
     var playerGame = gameTemplate.clone();
-    var gameTotal = pointsForGame(stats, player.captain);
+    var gameTotal = pointsForGame(stats, player.captain, player.superCaptain);
     if(stats.boxscore){
       var dateStr = dateStringFromGameId(stats.boxscore);
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com" + stats.boxscore).text(dateStr));
