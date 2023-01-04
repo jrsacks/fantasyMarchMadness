@@ -418,7 +418,7 @@ function shouldAddGame(player, stats, gameIndex){
   }
   var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
   if(currentYear()){
-      if(player.team.match(/Ohio State/) || player.team.match(/Michigan/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
+      if(player.team.match(/Ohio State/) || player.team.match(/Michigan W/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
           if(gameIndex == 0){
               return false;
           }
@@ -436,7 +436,7 @@ function shouldAddGame(player, stats, gameIndex){
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
-        if(player.team.match(/Ohio State/) || player.team.match(/Michigan/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
+        if(player.team.match(/Ohio State/) || player.team.match(/Michigan W/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
             return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
         } else {
             return (player.waived && gameIndex <= 8) || (player.pickup && gameIndex > 8);
