@@ -204,6 +204,9 @@ function buildPlayer(player, index){
       if(player.captain && player.captain == gameDate){
           playerGame.find('.multiplier').addClass('captain');
       }
+      if(player.superCaptain && player.superCaptain == gameDate){
+          playerGame.find('.multiplier').addClass('super-captain');
+      }
     } else {
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     }
