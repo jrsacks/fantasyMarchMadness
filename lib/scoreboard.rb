@@ -24,8 +24,9 @@ class Scoreboard
     end
   end
   
-  def captain(player_id, date)
+  def captain(player_id, date, super_date)
     @players[player_id]['captain'] = date
+    @players[player_id]['superCaptain'] = super_date
     File.open(@player_file, 'w') { |f| f.puts @players.to_json  }
   end
 

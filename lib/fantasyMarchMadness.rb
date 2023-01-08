@@ -176,7 +176,7 @@ class App < Sinatra::Base
     data = JSON.parse(request.body.read.to_s)
     STDERR.puts data
     if data["team"]
-      settings.scoreboard.captain data["player"], data["captain"]
+      settings.scoreboard.captain data["player"], data["captain"], data["superCaptain"]
     end
     ""
   end
