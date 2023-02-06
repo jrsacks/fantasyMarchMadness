@@ -241,7 +241,15 @@ function buildPlayer(player, index){
   var countable = _.sortBy(gameTotals, g => -g).sum();
   var average = (countable / (gameTotals.length || 1));
   playerContainer.find('.player-total').text(countable.toFixed(1) + " (" + average.toFixed(1) + ")");
-  var nameText = player.name + " (" + numberOfGames + ")";
+  var captainString = "";
+  var todayString = new Date().format("{yyyy}-{MM}-{dd}");
+  if(player.captain && player.captain <= todayString){
+      captainString += "c";
+  }
+  if(player.superCaptain && player.superCaptain <= todayString){
+      captainString += "s";
+  }
+  var nameText = player.name + " (" + numberOfGames + captainString + ")";
   playerContainer.find('.player-name .name').data('round',round).text(nameText).hover(function(){
     $(this).text(player.team);
   }, function(){
