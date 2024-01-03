@@ -120,7 +120,7 @@ function multiplierFor2024(stats, captain, superCaptain, name){
     }
   }
   if(name === "Zach Edey"){
-      multiplier = Math.max(1.0, multiplier);
+      multiplier = Math.min(1.0, multiplier);
   }
   return multiplier;
 }
