@@ -211,7 +211,7 @@ function buildPlayer(player, index){
       playerGame.find('.game-link').append($('<a>').attr('href',"http://sports.yahoo.com/ncaab" + gameId).text(dateStringFromGameId(gameId)));
     }
     playerGame.find('.base').text(basePointsForGame(stats));
-    playerGame.find('.multiplier').text(multiplierForGame(stats, player.captain, player.superCaptain).toFixed(2));
+    playerGame.find('.multiplier').text(multiplierForGame(stats, player.captain, player.superCaptain, player.name).toFixed(2));
 
     playerGame.find('.game-total').text(gameTotal.toFixed(1));
     _.each(stats, function(value, stat){
