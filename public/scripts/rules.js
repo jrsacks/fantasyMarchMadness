@@ -54,7 +54,7 @@ function projectedTeamInfo(total, players){
   return '';
 }
 
-function multiplierFor2024(stats, captain, superCaptain){
+function multiplierFor2024(stats, captain, superCaptain, name){
   var dateOfGame = stats.boxscore.split('-').last().slice(0,8);
   var gameDate  = dateOfGame.slice(0,4) + "-" + dateOfGame.slice(4,6) + "-" + dateOfGame.slice(6,8);
   var multiplier = 1;
