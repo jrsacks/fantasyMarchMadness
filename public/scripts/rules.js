@@ -515,6 +515,13 @@ function shouldAddGame(player, stats, gameIndex){
 
   if(player.waived || player.pickup){
     var waiveDate = "";
+    if(currentYear()){
+        if(player.team.match(/Illinois/) || player.team.match(/Northwestern/) || player.team.match(/Wisconsin/) || player.team.match(/Rutgers/)){
+            return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
+        } else {
+            return (player.waived && gameIndex <= 8) || (player.pickup && gameIndex > 8);
+        }
+    }
     if(historicYear() === "2023"){
         if(player.team.match(/Ohio State/) || player.team.match(/Michigan W/) || player.team.match(/Iowa/) || player.team.match(/Northwestern/)){
             return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
