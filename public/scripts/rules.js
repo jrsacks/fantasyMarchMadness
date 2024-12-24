@@ -24,6 +24,8 @@ function teamTotal(players){
     return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   } else if(year === '2015'){
     return _.pluck(players.slice(0,8), 'points').sum();
+  } else {
+    return sortedGameScores(players).slice(0,144).sum().toFixed(1);
   }
 }
 
@@ -52,6 +54,74 @@ function projectedTeamInfo(total, players){
     return ' (' + avg + ' - ' + min + ')';
   }
   return '';
+}
+
+function multiplierFor2025(stats, captain, superCaptain, name){
+  var dateOfGame = stats.boxscore.split('-').last().slice(0,8);
+  var gameDate  = dateOfGame.slice(0,4) + "-" + dateOfGame.slice(4,6) + "-" + dateOfGame.slice(6,8);
+  var multiplier = 1;
+  if(dateOfGame > "20250310"){
+      multiplier = 1.5;
+  }
+  if(captain && captain == gameDate){
+      multiplier *= 2;
+  }
+  if(superCaptain && superCaptain == gameDate){
+      multiplier *= 3;
+  }
+
+  if(stats.winner){
+    multiplier *= 1.4
+  }
+  if(stats.fouls === 5){
+    multiplier *= 0.7;
+  }
+
+  var overEight = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 8).length;
+  var overTen = _.filter([stats.points, stats.rebounds, stats.steals, stats.assists, stats.blocks, stats.threes], s => s >= 10).length;
+
+  if(overEight > 2) {
+    multiplier *= 2;
+  } else if (overTen === 2){
+    multiplier *= 1.5
+  } else if (overEight == 2){
+    multiplier *= 1.2
+  }
+
+  if(stats.fts_attempted >= 4){
+    var percent = (stats.fts / stats.fts_attempted);
+    if(percent < 0.3){
+      multiplier = 0;
+    } else if (percent < 0.5 ) {
+      multiplier *= 0.7;
+    } else if (percent > 0.9 ) {
+      multiplier *= 1.5;
+    } else if (percent > 0.8 ) {
+      multiplier *= 1.2;
+    }
+  }
+
+  if(stats.turnovers >= 6){
+    multiplier = 0;
+  } else if (stats.turnovers == 5){
+    multiplier *= 0.4;
+  } else if (stats.turnovers == 4){
+    multiplier *= 0.7;
+  }
+
+  if(stats.threes_attempted >= 4){
+    var percent = (stats.threes / stats.threes_attempted);
+    if(percent < 0.15){
+      multiplier *= 0.5;
+    } else if (percent < 0.25 ) {
+      multiplier *= 0.75;
+    } else if (percent > 0.75 ) {
+      multiplier *= 2;
+    } else if (percent > 0.5 ) {
+      multiplier *= 1.5;
+    }
+  }
+  return multiplier;
 }
 
 function multiplierFor2024(stats, captain, superCaptain, name){
@@ -448,6 +518,8 @@ function multiplierFor2020(stats){
 
 function multiplierForGame(stats, captain, superCaptain, name){
   if(currentYear()){
+    return multiplierFor2025(stats, captain, superCaptain, name);
+  } else if(historicYear() === '2024'){
     return multiplierFor2024(stats, captain, superCaptain, name);
   } else if(historicYear() === '2023'){
     return multiplierFor2023(stats, captain, superCaptain);
@@ -490,7 +562,7 @@ function shouldAddGame(player, stats, gameIndex){
     return true;
   }
   var dateOfGame = dateStringFromGameId(stats.boxscore).replace(/\//g, '');
-  if(currentYear()){
+  if(year == '2024'){
       if(player.team.match(/Illinois/) || player.team.match(/Northwestern/) || player.team.match(/Wisconsin/) || player.team.match(/Rutgers/)){
           if(gameIndex == 0){
               return false;
@@ -516,6 +588,9 @@ function shouldAddGame(player, stats, gameIndex){
   if(player.waived || player.pickup){
     var waiveDate = "";
     if(currentYear()){
+        return (player.waived && gameIndex <= 8) || (player.pickup && gameIndex > 8);
+    }
+    if(historicYear() === '2024'){
         if(player.team.match(/Illinois/) || player.team.match(/Northwestern/) || player.team.match(/Wisconsin/) || player.team.match(/Rutgers/)){
             return (player.waived && gameIndex <= 9) || (player.pickup && gameIndex > 9);
         } else {

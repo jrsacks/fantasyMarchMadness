@@ -1,6 +1,6 @@
 var teams = [];
 function currentYear(){
-  return window.location.pathname === '/' || historicYear() === '2024';
+  return window.location.pathname === '/' || historicYear() === '2025';
 }
 
 function historicYear() {
