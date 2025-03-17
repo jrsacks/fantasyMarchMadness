@@ -13,7 +13,7 @@ data["service"]["scoreboard"]["games"].each do |gid, game|
     min = start_time.min
 
     puts "#{min}-59 #{hour} * * * curl localhost:5678/game/#{gid} #b1g"
-    puts "* #{hour+1}-#{hour + 2} * * * curl localhost:5678/game/#{gid} #b1g"
+    puts "* #{hour+1}-#{(hour + 2)%24} * * * curl localhost:5678/game/#{gid} #b1g"
     puts "0-#{min} #{(hour+3)%24} * * * curl localhost:5678/game/#{gid} #b1g"
   end
 end
