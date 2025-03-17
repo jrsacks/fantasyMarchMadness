@@ -4,7 +4,7 @@ require 'json'
 require 'date'
 require 'open-uri'
 
-tv = ["CBS","TBS","TNT","TRU"]
+tv = ["CBS","TBS","TNT","TRU", "truT", "TBS, truT"]
 date = ARGV[0] || Time.now.to_s.split(' ').first
 data = JSON.parse(open("https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?leagues=ncaab&date=#{date}").read)
 games = data["service"]["scoreboard"]["games"]
