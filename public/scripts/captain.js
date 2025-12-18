@@ -27,8 +27,8 @@ function showTeam(){
         var playerInfo = playerData[playerId];
         var player = $('.player.template').clone().removeClass('template');
         player.find('.name').text(playerText(playerInfo));
-        player.find('.regular').val(playerInfo.captain || "2023-03-06");
-        player.find('.super').val(playerInfo.superCaptain || "2023-03-06");
+        player.find('.regular').val(playerInfo.captain || "2026-03-09");
+        player.find('.super').val(playerInfo.superCaptain || "2026-03-09");
         player.find('input').change(() => {
             player.find("button").removeClass("btn-success");
         });
